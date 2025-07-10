@@ -1,0 +1,392 @@
+html,
+body {
+  height: 100%;
+}
+
+.container {
+  position: relative;
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 20px;
+  box-sizing: border-box;
+}
+
+/* слой затемнения */
+.dm-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.65);
+  display: none;
+  overflow: auto;
+  width: 100%;
+  height: 100%;
+  z-index: 1000;
+}
+
+
+/* слой затемнения */
+.dm-overlayV {
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.65);
+  display: block;
+  overflow: auto;
+  width: 100%;
+  height: 100%;
+  z-index: 1000;
+}
+
+
+/* активируем слой затемнения и модальное окно */
+.dm-overlay:target {
+  display: block;
+  /* анимация и время задержки */
+  -webkit-animation: fade .6s;
+  -moz-animation: fade .6s;
+  animation: fade .6s;
+}
+
+
+/* блочная таблица */
+.dm-table {
+  display: table;
+  width: 100%;
+  height: 100%;
+}
+
+/* ячейка блочной таблицы */
+.dm-cell {
+  display: table-cell;
+  padding: 0 1em;
+  vertical-align: middle;
+  text-align: center;
+}
+
+/* модальный блок */
+.dm-modal {
+  display: inline-block;
+  padding: 20px;
+  /* максимально возможная ширина */
+  max-width: 50em;
+  background: #607d8b;
+  /* внешняя тень блока */
+  -webkit-box-shadow: 0px 15px 20px rgba(0, 0, 0, 0.22), 0px 19px 60px rgba(0, 0, 0, 0.3);
+  -moz-box-shadow: 0px 15px 20px rgba(0, 0, 0, 0.22), 0px 19px 60px rgba(0, 0, 0, 0.3);
+  box-shadow: 0px 15px 20px rgba(0, 0, 0, 0.22), 0px 19px 60px rgba(0, 0, 0, 0.3);
+  color: #cfd8dc;
+  text-align: left;
+  /* анимация и время задержки */
+  -webkit-animation: fade .8s;
+  -moz-animation: fade .8s;
+  animation: fade .8s;
+}
+
+.dm-modal div {
+  background-color: #f7f7f7;
+}
+
+/* изображения в модальном окне */
+.dm-modal img {
+  width: 100%;
+  height: auto;
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 50%;
+
+}
+
+
+
+.dropbtn:hover,
+.dropbtn:focus {
+  background-color: #3e8e41;
+}
+
+.dropdown-content {
+  display: none;
+  position: fixed;
+  background-color: #f6f6f6;
+  min-width: 230px;
+  border: 1px solid #ddd;
+  z-index: 1;
+  top: 15%;
+  right: 20px;
+}
+
+
+.dropdown-Description {
+  display: none;
+  background-color: #f6f6f6;
+  border: 1px solid #ddd;
+  z-index: 1;
+  top: 15%;
+  right: 20px;
+  overflow: auto;
+  max-height: 100%;
+  word-wrap: break-word;
+}
+
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+
+.dropdown-content a:hover {
+  background-color: #f1f1f1
+}
+
+.show {
+  display: block;
+}
+
+
+.u-full-width img {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+}
+
+
+
+.u-full-width table {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  margin: auto;
+}
+
+.Head img {
+
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+
+
+
+
+div:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, .2);
+}
+
+button,
+input {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+button {
+  background-color: #f7f7f7;
+}
+
+button:hover {
+  background-color: #f0f0f0;
+}
+
+h1 {
+  font-size: 32px;
+  letter-spacing: -1px;
+  margin-bottom: 8px;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+
+.buttonPerform {
+  background-image: url('/img/icon-png-transparent-4.jpg');
+  background-position: -540px -50px;
+  /* Координаты верхнего левого угла иконки */
+  width: 45px;
+  /* Ширина иконки */
+  height: 45px;
+  /* Высота иконки */
+}
+
+.buttonReference {
+  background-image: url('/img/icon-png-transparent-4.jpg');
+  background-position: -55px -385px;
+  /* Координаты верхнего левого угла иконки */
+  width: 45px;
+  /* Ширина иконки */
+  height: 45px;
+  /* Высота иконки */
+}
+
+.buttonStatistic {
+  background-image: url('/img/icon-png-transparent-4.jpg');
+  background-position: -55px -150px;
+  /* Координаты верхнего левого угла иконки */
+  width: 45px;
+  /* Ширина иконки */
+  height: 45px;
+  /* Высота иконки */
+}
+
+
+.buttonDiary {
+  background-image: url('/img/icon-png-transparent-4.jpg');
+  background-position: -187px -7px;
+  /* Координаты верхнего левого угла иконки */
+  width: 45px;
+  /* Ширина иконки */
+  height: 45px;
+  /* Высота иконки */
+}
+
+.buttonProject {
+  background-image: url('/img/icon-png-transparent-4.jpg');
+  background-position: -545px -380px;
+  /* Координаты верхнего левого угла иконки */
+  width: 45px;
+  /* Ширина иконки */
+  height: 45px;
+  /* Высота иконки */
+}
+
+
+.buttonIdea {
+  background-image: url('/img/icon-png-transparent-4.jpg');
+  background-position: -187px -288px;
+  /* Координаты верхнего левого угла иконки */
+  width: 45px;
+  /* Ширина иконки */
+  height: 45px;
+  /* Высота иконки */
+}
+
+.buttonViewHide {
+  background-image: url('/img/icon-png-transparent-4.jpg');
+  background-position: -365px -55px;
+  /* Координаты верхнего левого угла иконки */
+  width: 45px;
+  /* Ширина иконки */
+  height: 45px;
+  /* Высота иконки */
+}
+
+.buttonTask {
+  background-image: url('/img/icon-png-transparent-4.jpg');
+  background-position: -452px -147px;
+  /* Координаты верхнего левого угла иконки */
+  width: 45px;
+  /* Ширина иконки */
+  height: 45px;
+  /* Высота иконки */
+}
+
+.buttonLifestyle {
+  background-image: url('/img/icon-png-transparent-4.jpg');
+  background-position: -275px -383px;
+  /* Координаты верхнего левого угла иконки */
+  width: 45px;
+  /* Ширина иконки */
+  height: 45px;
+  /* Высота иконки */
+}
+
+.buttonViewClose {
+  background-image: url('/img/icon-png-transparent-4.jpg');
+  background-position: -53px -53px;
+  /* Координаты верхнего левого угла иконки */
+  width: 45px;
+  /* Ширина иконки */
+  height: 45px;
+  /* Высота иконки */
+}
+
+.buttonWishes {
+  background-image: url('/img/icon-png-transparent-4.jpg');
+  background-position: -188px -194px;
+  /* Координаты верхнего левого угла иконки */
+  width: 45px;
+  /* Ширина иконки */
+  height: 45px;
+  /* Высота иконки */
+}
+
+.buttonCopy {
+  background-image: url('/img/icon-png-transparent-4.jpg');
+  background-position: -187px -7px;
+  /* Координаты верхнего левого угла иконки */
+  width: 45px;
+  /* Ширина иконки */
+  height: 45px;
+  /* Высота иконки */
+}
+
+.open-filemanager {
+  background-image: url('/img/icon-png-transparent-4.jpg');
+  background-position: -232px -333px;
+  /* Координаты верхнего левого угла иконки */
+  width: 45px;
+  /* Ширина иконки */
+  height: 45px;
+  /* Высота иконки */
+
+}
+
+.add-filemanager {
+  background-image: url('/img/icon-png-transparent-4.jpg');
+  background-position: -367px -333px;
+  /* Координаты верхнего левого угла иконки */
+  width: 45px;
+  /* Ширина иконки */
+  height: 45px;
+  /* Высота иконки */
+
+}
+
+
+#filePutModal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border: 1px solid #ccc;
+  padding: 20px;
+  background-color: #fff;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+
+.notification {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: #C6F7A8; /* light green */
+  color: #333;
+  padding: 10px;
+  border-bottom: 1px solid #C6F7A8;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.3);
+  z-index: 9999; /* make sure it's above all other elements */
+}
+
+.notification::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 10px;
+  height: 100%;
+  background-color: #C6F7A8;
+}

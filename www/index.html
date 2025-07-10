@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+
+
+	<!-- Basic Page Needs http://getskeleton.com/
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+	<meta charset="utf-8">
+	<title>Планеровщик</title>
+	<meta name="description" content="">
+	<meta name="author" content="">
+
+	<!-- Mobile Specific Metas
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
+	<script src="js/cookie.min.js" ></script>
+	<script src="js/avtoriz.js"></script>
+	<script type="text/javascript" charset="utf-8" src="cordova.js"></script> 
+	<script type="text/javascript" src="js/nicEdit.js?v=0.002"></script> 
+	<script type="text/javascript" src="js/manager.js?v=0.003"></script> 
+
+	
+
+
+  <script type="text/javascript">
+ bkLib.onDomLoaded(function() {
+			 //nicEditors.allTextAreas() ;
+		new nicEditor({fullPanel : true, maxHeight: 500, iconsPath: 'img/nicEditorIcons.gif'}).panelInstance('Form1_description');
+        new nicEditor({fullPanel : true, maxHeight: 500, iconsPath: 'img/nicEditorIcons.gif'}).panelInstance('Form2_description');
+	});
+  </script>
+
+	<script src="js/head.js?v=11"></script>
+
+
+
+
+	
+	<script>
+
+
+
+		var user_id = GetCookie("UserId");
+		var UserPage = GetCookie("UserHash");
+		var ViewClose = 0;
+		var ViewHide = 0
+		var Razdel_id = 9;
+		var ProjectList = [];
+
+
+
+
+	</script>
+
+	<!-- FONT  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+
+	<!-- CSS
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+	<link href="css/normalize.css" rel="stylesheet">
+	<link href="css/index.css?v=7.065ы" rel="stylesheet">
+	<link href="css/manager.css?v=7.067" rel="stylesheet">
+	<!-- Favicon
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+	<link rel="icon" type="image/png" href="images/favicon.png">
+
+</head>
+
+<body>
+
+	
+<div class="menu_task">
+
+		<button class="buttonPerform" onclick="PerformList()" title='Выполнить' type="submit"></button>
+		<button class="buttonProject" onclick="ProjectList()" title='Проекты' type="submit"></button>
+		<button class="buttonDiary" onclick="DiaryList()" title='Дневник' type="submit"></button>
+		<button class="buttonTask" onclick="TaskList()" title='Дело' type="submit"></button>
+		<button class="buttonWishes" onclick="WishesList()" title='Желания' type="submit"></button>
+		<button class="buttonIdea" onclick="IdeaList()" title='Идеи' type="submit"></button>
+		<button class="buttonLifestyle" onclick="LifestyleList()" title='Образ жизни'  type="submit"></button>
+		<button class="buttonReference" onclick="ReferenceList()" title='Справочные' type="submit"></button> 
+		<button class="buttonStatistic" onclick="StatisticList()" title='Статистика' type="submit"></button> |
+		<button class="buttonViewClose" onclick="if(ViewClose==0){ViewClose=1;} else {ViewClose=0;}; RunLast()" type="submit" title='Завершенные'></button>
+		<button class="buttonViewHide" onclick="if(ViewHide==0){ViewHide=1;} else {ViewHide=0;}; RunLast()" type="submit" title='Будущие' ></button>
+			<button id="open-filemanager" class="open-filemanager" style='float: right;' onclick="FileMenegerHide()" title='Файловый менеджер'></button>
+	</div>
+
+	
+	<div id="Avtorization_link" style=''></div>
+
+
+	<!----------------------------- Основная форма вывода   ––––––––––––––––––––––––––––––––––––––––––––––––––    -->
+	<div class="container">
+		<div class="" style="border: 1px solid darkblue;">
+			<div class="Head" id="HeadShop">
+
+			</div>
+			<table id='ViewPort' class="u-full-width">
+			</table>
+			<div id="load-more-button"></div>
+		</div>
+	</div>
+
+	<!--ххххххххххххххххххххххххх Основная форма вывода  хххххххххххххххххххххххххххххххххххххххххххххххх
+<!------------------------ Модельное Окно вывода статей   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+	<div onclick='GetSale()' class="dm-overlay" id="Modal0">
+		<div class="dm-table">
+			<div class="dm-cell">
+				<div class="dm-modal" id='WindowSell'>
+
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--ххххххххххххххххххххххххх Модельное Окно вывода статей  ххххххххххххххххххххххххххххххххххх-->
+
+
+	<!------------ Форма добавления Заметки   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+	<div class="dm-overlay" id="Modal1_Head">
+		<div class="dm-table">
+			<div class="dm-cell">
+				<div class="dm-modal" id='Modal1'>
+				<button id="open-filemanager" class="open-filemanager" style='float: right;' onclick="FileMenegerHide()" title='Файловый менеджер'></button>
+				<button id="open-filemanager" class="add-filemanager" style='float: right;' onclick="FilePut()" title='Файловый менеджер'></button>
+				<h3>Добавить заметку</h3>Название:<input id='Form1_name' type='text' size='40'><br>
+					Номер проекта:<select id='Form1_id_project' placeholder='Номер проекта'>
+						<option value='0'>--</option>
+					</select><br>
+					Описание: <textarea name="area1" id='Form1_description' style="width: 35em; height: 200px;"></textarea>
+					Вид:<select id='Form1_type_project' placeholder='Тип'>
+						<option value='0'>Не Активно</option>
+						<option value='9'>Выполнить</option>
+						<option value='10'>Желания</option>
+						<option value='11'>Образ жизни</option>
+						<option value='12'>Идеи</option>
+						<option value='13'>Дневние, заметки</option>
+						<option value='14'>Справочные</option>
+						<option value='15'>Дело</option>
+						<option value='16'>Статистика</option>
+						<option value='1'>Проект</option>
+						<option value='2'>>>под раздел</option>
+						<option value='3'>>>>под раздел</option>
+						<option value='4'>>>>>под раздел</option>
+						<option value='5'>>>>>>под раздел</option>
+						<option value='6'>>>>>>>под раздел</option>
+						<option value='7'>>>>>>>>под раздел</option>
+						<option value='8'>>>>>>>>>под раздел</option>
+					</select><br>
+					Статус:<select id='Form1_status' placeholder='Тип'>
+						<option value='0'>Не Активно</option>
+						<option value='1' selected>Активен</option>
+						<option value='2'>В процессе</option>
+						<option value='3'>За вершон но поддерживается</option>
+						<option value='4'>Завершен</option>
+						<option value='5'>Закрыт/Не актуален</option>
+					</select><br>
+					Напомнить<input type="date" id="Form1_remind_date" value="">
+					<input type="time" id="Form1_remind_time" value="">
+					Повторить:<select id='Form1_remind' placeholder='Повторить'>
+						<option value=''>Не Активно</option>
+						<option value='+1 days'>1й день</option>
+						<option value='+2 days'>2 дня</option>
+						<option value='+3 days'>3 дня</option>
+						<option value='+4 days'>4 дня</option>
+						<option value='+5 days'>5 деней</option>
+						<option value='+6 days'>6 деней</option>
+						<option value='+7 days'>7 деней</option>
+						<option value='+10 days'>10 дней</option>
+						<option value='+1 month'>1 месяц</option>
+						<option value='+2 month'>2 месяц</option>
+						<option value='+3 month'>3 месяц</option>
+						<option value='+6 month'>6 месяц</option>
+						<option value='+1 year'>1 год</option>
+					</select><br>
+					Тэги:<input id='Form1_tag' type='text' size='40'><br>
+					Дата создания:<input type="date" id="Form1_data_create" value="">
+					<br>
+					<button onclick="Form1Post()" type="submit">Добавить</button>
+					<button onclick="Form1_ShowHide()" type="submit">Закрыть</button>
+
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- ххххххххххххххххххххх Форма добавления Заметки    ххххххххххххххххххххххххххххххххххххххххх -->
+
+
+	<!------------ Форма редактирования Заметки   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+	<div class="dm-overlay" id="Modal2_Head">
+		<div class="dm-table">
+			<div class="dm-cell">
+				<div class="dm-modal" id='Modal2'>
+				<button id="open-filemanager" class="open-filemanager" style='float: right;' onclick="FileMenegerHide()" title='Файловый менеджер'></button>
+				<button id="open-filemanager" class="add-filemanager" style='float: right;' onclick="FilePut()" title='Файловый менеджер'></button>
+					<h3>Добавить заметку</h3>Название:<input id='Form2_name' type='text' size='40'><br>
+					Номер проекта:<select id='Form2_id_project' placeholder='Номер проекта'>
+						<option value='0'>--</option>
+					</select><br>
+					Описание:<textarea name="area2" id='Form2_description' style="width: 35em; height: 200px;"></textarea>
+					<input id='Form2_id' type="hidden">
+					Вид:<select id='Form2_type_project' placeholder='Тип'>
+						<option value=''>Не Активно</option>
+						<option value='9'>Выполнить</option>
+						<option value='10'>Желания</option>
+						<option value='11'>Образ жизни</option>
+						<option value='12'>Идеи</option>
+						<option value='13'>Дневние, заметки</option>
+						<option value='14'>Справочные</option>
+						<option value='15'>Дело</option>
+						<option value='16'>Статистика</option>
+						<option value='1'>Проект</option>
+						<option value='2'>>>под раздел</option>
+						<option value='3'>>>>под раздел</option>
+						<option value='4'>>>>>под раздел</option>
+						<option value='5'>>>>>>под раздел</option>
+						<option value='6'>>>>>>>под раздел</option>
+						<option value='7'>>>>>>>>под раздел</option>
+						<option value='8'>>>>>>>>>под раздел</option>
+					</select><br>
+					Статус:<select id='Form2_status' placeholder='Тип'>
+						<option value='0'>Не Активно</option>
+						<option value='1'>Активен</option>
+						<option value='2'>В процессе</option>
+						<option value='3'>За вершон но поддерживается</option>
+						<option value='4'>Завершен</option>
+						<option value='5'>Закрыт/Не актуален</option>
+					</select><br>
+					Напомнить<input type="date" id="Form2_remind_date" value="">
+					<input type="time" id="Form2_remind_time" value="">
+					Повторить:<select id='Form2_remind' placeholder='Повторить'>
+						<option value=''>Не Активно</option>
+						<option value='+1 days'>1й день</option>
+						<option value='+2 days'>2 дня</option>
+						<option value='+3 days'>3 дня</option>
+						<option value='+4 days'>4 дня</option>
+						<option value='+5 days'>5 дней</option>
+						<option value='+6 days'>6 дней</option>
+						<option value='+7 days'>7 дней</option>
+						<option value='+10 days'>10 дней</option>
+						<option value='+1 month'>1 месяц</option>
+						<option value='+2 month'>2 месяц</option>
+						<option value='+3 month'>3 месяц</option>
+						<option value='+6 month'>6 месяц</option>
+						<option value='+1 year'>1 год</option>
+					</select><br>
+					Тэги:<input id='Form2_tag' type='text' size='40'><br>
+					Дата создания:<input type="date" id="Form2_data_create" value="">
+					<br>
+					<button onclick="Form2Post()" type="submit">Добавить</button>
+					<button onclick="Form2_ShowHide()" type="submit">Закрыть</button>
+
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- ххххххххххххххххххххх Форма редактирования Заметки    ххххххххххххххххххххххххххххххххххххххххх -->
+
+
+	<!------------ Форма добавления Пользователя  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+	<div class="dm-overlay" id="Modal3_Head">
+		<div class="dm-table">
+			<div class="dm-cell">
+				<div class="dm-modal" id='Moda3'>
+
+					<h3>Регистрация пользователя</h3>Логин:<input id='Form3_login' type='text' size='40'><br>
+					Пароль:<input id='Form3_password' type='password' size='40'><br>
+					<br><a href='#' onclick='Form3Post()'>Добавить</a>
+					<a href='#' onclick='Form3_ShowHide()'>Закрыть</a>
+
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- ххххххххххххххххххххх Форма добавления Пользователя   ххххххххххххххххххххххххххххххххххххххххх -->
+
+
+	<!------------ Форма добавления Авторизации  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+	<div class="dm-overlay" id="Modal4_Head">
+		<div class="dm-table">
+			<div class="dm-cell">
+				<div class="dm-modal" id='Moda4'>
+					<h3>Авторизация</h3>Логин:<input id='Form4_login' type='text' size='40'><br>
+					Пароль:<input id='Form4_password' type='password' size='40'><br>
+					<br><a href='#' onclick='Form4Post()'>Войти</a>
+					<a href='#' onclick='Form4_ShowHide()'>Закрыть</a>
+
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- ххххххххххххххххххххх Форма добавления Пользователя   ххххххххххххххххххххххххххххххххххххххххх -->
+
+
+
+	<!------------ Форма Удалить проект  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+	<div class="dm-overlay" id="Modal5_Head">
+		<div class="dm-table">
+			<div class="dm-cell">
+				<div class="dm-modal" id='Moda5'>
+
+					<h3>Удалить заметку?</h3>
+					<input id='Form5_id' type="hidden">
+					<br><a href='#' onclick='Form5Post()'>Да</a>
+					<a href='#' onclick='Form5_ShowHide()'>Нет</a>
+
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- ххххххххххххххххххххх Форма добавления Пользователя   ххххххххххххххххххххххххххххххххххххххххх -->
+
+
+
+
+
+
+
+
+	<script src="js/index.js?v=16.2206"></script>
+
+
+	<img src='/img/pluse.png' onclick="Form1_ShowHide()"
+		style='position: fixed; bottom: 15px; right: 10px ;width: 10%;' title='Добавить заметку'>
+	<!-- End Document   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+
+
+
+<div id="filePutOverlay"></div>
+<div id="filePutModal">
+    <h2>Вставить файлы</h2>
+    <input type="text" id="fileInput" placeholder="Enter file info here">
+    <br><br>
+    <button onclick="closeFilePut()">Закрыть</button>
+    <button onclick="submitFilePut()">Отправить</button>
+</div>
+
+
+<!------------ Форма добавления Авторизации  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+<div class="dm-overlay" id="Avtorization_Head">
+    <div class="dm-table">
+        <div class="dm-cell">
+            <div class="dm-modal">
+                <h3>Авторизация</h3>Логин:<input id='Avtorization_login' type='text' size='40'><br>
+                Пароль:<input id='Avtorization_password' type='password' size='40'><br>
+                <br><a href='#' onclick='AvtorizationPost()'>Войти</a>
+                <a href='#' onclick='Avtorization_ShowHide()'>Закрыть</a>
+
+            </div>
+        </div>
+    </div>
+</div>
+<!-- ххххххххххххххххххххх Форма добавления Пользователя   ххххххххххххххххххххххххххххххххххххххххх -->
+
+
+
+<!-- File Manager Container -->
+<div class="file-manager-container" id="file-manager-container">
+	<!-- Header -->
+	<img src="img/icon/no.png" onclick="FileMenegerHide()" style='height: 50px; width: 50px;  top: 20px;  right: 20px; position: absolute;' />
+	<div class="header">
+	  <div id="DirectoryPath">Путь:</div>
+	</div>
+  <table><tr><td style='vertical-align: top;' class="navigation-pane">
+	<!-- Navigation Pane -->
+
+  
+		  <img src="img/icon/back.png" onclick="GoBack()" />
+		  <label for="file"> <img id="icon" src="img/icon/upload.png"></label>
+		  <form action="" enctype="multipart/form-data" method="POST">
+		  <input id="file" type="file" class="hide" multiple="multiple" name="file[]" />
+		  <div id="preloader"><img alt="loader" src="img/icon/load.gif"  style='height: 15px; width: 15px;'/></div>
+				  </form>
+		  
+  
+		  <img src="img/icon/download.png" onclick="DownloadSelectFile()" />
+		  <img src="img/icon/no.png" onclick="ShowMessage('Modal_Head_Delete')"" />
+		  <img src="img/icon/addFolder.png" onclick="ShowMessage('Modal_Head_CreateFolder')" />
+		  <img src="img/icon/copy.png" onclick="CopyFile()" />
+		  <img src="img/icon/paste.png" onclick="PasteFile()" />
+
+	
+	</div>
+  </td>
+  <td>
+	<div id="file-lists" ></div>
+	
+  </td>
+  </tr>
+  </table>
+  
+	
+	
+  
+  
+  </div>
+  
+  <div class="dm-overlay" id="Modal_Head_Delete">
+	<div class="dm-table">
+	  <div class="dm-cell">
+		<div class="dm-modal" >
+  
+		  <h3>Удалить Файл или папку?</h3>
+		  <table><tr><td style='width: 10%;'/><img src="img/icon/yes.png" onclick="DeleteFileDir()" /></td><td style='width: 10%; '><img onclick="HideMessage('Modal_Head_Delete')"  src="img/icon/no.png" /></td></tr></table>
+		</div>
+	  </div>
+	</div>
+  </div>
+  
+  
+  <div class="dm-overlay" id="Modal_Head_CreateFolder">
+	<div class="dm-table">
+	  <div class="dm-cell">
+		<div class="dm-modal" ">
+  
+		  <h3>Создать папку?</h3>
+		  |<input  type="text" id="CreateFolderName"  size="10" />
+		  <table><tr><td style='width: 10%;'/><img src="img/icon/yes.png" onclick="AddDir()" /></td><td style='width: 10%; '><img onclick="HideMessage('Modal_Head_CreateFolder')"  src="img/icon/no.png" /></td></tr></table>
+		</div>
+	  </div>
+	</div>
+  </div>
+
+
+
+
+
+</body>
+
+</html>

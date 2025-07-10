@@ -1,0 +1,25 @@
+{
+  "name": "io.cordova.FanlikReader",
+  "displayName": "FanlikReader",
+  "version": "1.0.0",
+  "description": "FanlikReader.",
+  "main": "book.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "ecosystem:cordova"
+  ],
+  "author": "Apache Cordova Team",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "cordova-android": "^13.0.0",
+    "cordova-browser": "^7.0.0"
+  },
+  "cordova": {
+    "platforms": [
+      "android",
+      "browser"
+    ]
+  }
+}
