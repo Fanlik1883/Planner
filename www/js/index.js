@@ -1,6 +1,6 @@
 Form1_Run_once = 0
-var UserHash = getCookie("UserHash") || '';
-var UserName = getCookie("UserName") || '';
+var UserHash = getCookie("user_hash") || '';
+var UserName = getCookie("user_name") || '';
 var OutList=new Array();
 
 
