@@ -33,7 +33,7 @@ function PerformList(offset = 0) { // Задачи на выполнения
 	$.ajaxSetup({ timeout: 10000 });
 
 	////--------------------------	ViewPort.innerHTML=''; UserName: UserName,UserHash: UserHash
-	$.post('https://allfilmbook.ru/API/project_api.php', { type: 'PerformList', ViewClose: ViewClose, ViewHide: ViewHide, UserName: UserName,UserHash: UserHash }).done(function (data) {
+	$.post('https://api.allfilmbook.ru/project_api.php', { type: 'PerformList', ViewClose: ViewClose, ViewHide: ViewHide, UserName: UserName,UserHash: UserHash }).done(function (data) {
 		json = JSON.parse(data);
 		OutList=OutList.concat(json);
 		renderTable (Razdel_id,OutList);
@@ -55,7 +55,7 @@ function TaskList(offset = 0) { // Проекты
 	$.ajaxSetup({ timeout: 10000 });
 
 	////--------------------------	ViewPort.innerHTML='';
-	$.post('https://allfilmbook.ru/API/project_api.php', { type: 'TaskList', UserName: UserName,UserHash: UserHash }).done(function (data) {
+	$.post('https://api.allfilmbook.ru/project_api.php', { type: 'TaskList', UserName: UserName,UserHash: UserHash }).done(function (data) {
 		json = JSON.parse(data);
 		OutList=OutList.concat(json);
 		renderTable (Razdel_id,OutList);
@@ -66,7 +66,7 @@ function TaskInProjectList(id) { // Проекты
 	$.ajaxSetup({ timeout: 3000 });
 	var liLast = '';
 	////--------------------------	ViewPort.innerHTML='';
-	$.post('https://allfilmbook.ru/API/project_api.php', { type: 'TaskInProjectList', id: id, UserName: UserName,UserHash: UserHash }).done(function (data) {
+	$.post('https://api.allfilmbook.ru/project_api.php', { type: 'TaskInProjectList', id: id, UserName: UserName,UserHash: UserHash }).done(function (data) {
 		json = JSON.parse(data);
 		json.forEach(function (item, i, json) {
 			liLast = liLast + "<p>&nbsp &nbsp &nbsp &nbsp<input type='checkbox' onclick='Done(" + item['id'] + ")'> <label onclick='ShowHideDescription(" + item['id'] + ")'>" + item['name'] + " " + item['remind_date'] + "  <img src='img/baseline_edit_black_24dp.png'  onclick='Form2_ShowHide(" + item['id'] + ")' style='width: 24px;display: unset;'  title='Редактировать'><img src='img/baseline_delete_black_24dp.png'  onclick='Form5_ShowHide(" + item['id'] + ")' style='width: 24px;display: unset;'  title='Удалить'></label><div class='dropdown-Description' id='Description_" + item['id'] + "'><hr>" + item['description'] + "</div></p>"
@@ -98,7 +98,7 @@ function ProjectList(offset = 0) { // Проекты
 	$.ajaxSetup({ timeout: 10000 });
 
 	////--------------------------	ViewPort.innerHTML='';
-	$.post('https://allfilmbook.ru/API/project_api.php', { type: 'ProjectList', UserName: UserName,UserHash: UserHash }).done(function (data) {
+	$.post('https://api.allfilmbook.ru/project_api.php', { type: 'ProjectList', UserName: UserName,UserHash: UserHash }).done(function (data) {
 		json = JSON.parse(data);
 		OutList=OutList.concat(json);
 		renderTable (Razdel_id,OutList);
@@ -129,7 +129,7 @@ function DiaryList(offset = 0) { // Дневник
 	$.ajaxSetup({ timeout: 10000 });
 
 	////--------------------------	ViewPort.innerHTML='';
-	$.post('https://allfilmbook.ru/API/project_api.php', { type: 'DiaryList', UserName: UserName,UserHash: UserHash ,offset: offset}).done(function (data) {
+	$.post('https://api.allfilmbook.ru/project_api.php', { type: 'DiaryList', UserName: UserName,UserHash: UserHash ,offset: offset}).done(function (data) {
 		json = JSON.parse(data);
 		OutList=OutList.concat(json);
 		renderTable (Razdel_id,OutList);
@@ -176,7 +176,7 @@ function WishesList(offset = 0) { // Желания
 	$.ajaxSetup({ timeout: 10000 });
 
 	////--------------------------	ViewPort.innerHTML='';
-	$.post('https://allfilmbook.ru/API/project_api.php', { type: 'WishesList', UserName: UserName,UserHash: UserHash }).done(function (data) {
+	$.post('https://api.allfilmbook.ru/project_api.php', { type: 'WishesList', UserName: UserName,UserHash: UserHash }).done(function (data) {
 		json = JSON.parse(data);
 		OutList=OutList.concat(json);
 		renderTable (Razdel_id,OutList);
@@ -195,7 +195,7 @@ function IdeaList(offset = 0) { //Идеи
 	$.ajaxSetup({ timeout: 10000 });
 
 	////--------------------------	ViewPort.innerHTML='';
-	$.post('https://allfilmbook.ru/API/project_api.php', { type: 'IdeaList', UserName: UserName,UserHash: UserHash }).done(function (data) {
+	$.post('https://api.allfilmbook.ru/project_api.php', { type: 'IdeaList', UserName: UserName,UserHash: UserHash }).done(function (data) {
 		json = JSON.parse(data);
 		OutList=OutList.concat(json);
 		renderTable (Razdel_id,OutList);
@@ -214,7 +214,7 @@ function LifestyleList(offset = 0) { // Образ жизни
 	$.ajaxSetup({ timeout: 10000 });
 
 	////--------------------------	ViewPort.innerHTML='';
-	$.post('https://allfilmbook.ru/API/project_api.php', { type: 'LifestyleList', UserName: UserName,UserHash: UserHash }).done(function (data) {
+	$.post('https://api.allfilmbook.ru/project_api.php', { type: 'LifestyleList', UserName: UserName,UserHash: UserHash }).done(function (data) {
 		json = JSON.parse(data);
 		OutList=OutList.concat(json);
 		renderTable (Razdel_id,OutList);
@@ -233,7 +233,7 @@ function ReferenceList(offset = 0) { // Справочные данные
 	$.ajaxSetup({ timeout: 10000 });
 
 	////--------------------------	ViewPort.innerHTML='';
-	$.post('https://allfilmbook.ru/API/project_api.php', { type: 'ReferenceList', UserName: UserName,UserHash: UserHash }).done(function (data) {
+	$.post('https://api.allfilmbook.ru/project_api.php', { type: 'ReferenceList', UserName: UserName,UserHash: UserHash }).done(function (data) {
 		json = JSON.parse(data);
 		OutList=OutList.concat(json);
 		renderTable (Razdel_id,OutList);
@@ -253,7 +253,7 @@ function StatisticList(offset = 0) { // Справочные данные
 	$.ajaxSetup({ timeout: 10000 });
 
 	////--------------------------	ViewPort.innerHTML='';
-	$.post('https://allfilmbook.ru/API/project_api.php', { type: 'StatisticList', UserName: UserName,UserHash: UserHash }).done(function (data) {
+	$.post('https://api.allfilmbook.ru/project_api.php', { type: 'StatisticList', UserName: UserName,UserHash: UserHash }).done(function (data) {
 		json = JSON.parse(data);
 		OutList=OutList.concat(json);
 		renderTable (Razdel_id,OutList);
@@ -269,7 +269,7 @@ function StatisticList(offset = 0) { // Справочные данные
 function Done(id) {
 
 	$.ajaxSetup({ timeout: 10000 });
-	$.post('https://allfilmbook.ru/API/project_api.php', { type: 'Done', id: id, UserName: UserName,UserHash: UserHash }).done(function (data) {
+	$.post('https://api.allfilmbook.ru/project_api.php', { type: 'Done', id: id, UserName: UserName,UserHash: UserHash }).done(function (data) {
 		if (data === "Ok") {
 			RunLast()
 		}
@@ -283,7 +283,7 @@ function Done(id) {
 function Pluse1Day(id) {
 
 	$.ajaxSetup({ timeout: 10000 });
-	$.post('https://allfilmbook.ru/API/project_api.php', { type: 'Pluse1Day', id: id, UserName: UserName,UserHash: UserHash }).done(function (data) {
+	$.post('https://api.allfilmbook.ru/project_api.php', { type: 'Pluse1Day', id: id, UserName: UserName,UserHash: UserHash }).done(function (data) {
 		if (data === "Ok") {
 			RunLast()
 		}
@@ -366,7 +366,7 @@ function Form1Post() {
 	var remind = document.getElementById('Form1_remind').value
 	var remind_time = document.getElementById('Form1_remind_time').value
 	$.ajaxSetup({ timeout: 10000 });
-	$.post('https://allfilmbook.ru/API/project_api.php', { type: 'Form1_AddProject', remind: remind,remind_time:remind_time, remind_date: remind_date, name: name, id_project: id_project, description: description, type_project: type_project, status: status0, tag: tag, data_create: data_create, UserName: UserName,UserHash: UserHash }).done(function (data) {
+	$.post('https://api.allfilmbook.ru/project_api.php', { type: 'Form1_AddProject', remind: remind,remind_time:remind_time, remind_date: remind_date, name: name, id_project: id_project, description: description, type_project: type_project, status: status0, tag: tag, data_create: data_create, UserName: UserName,UserHash: UserHash }).done(function (data) {
 		if (data === "Ok") {
 			if (id_project > 0) Form1_Run_once = 0 // Обновить список проектов
 			Form1_ShowHide()
@@ -390,7 +390,7 @@ function Form10Post() {
 	var type_project = document.getElementById('Form10_type_project').value
 	var status0 = document.getElementById('Form10_status').value
 	$.ajaxSetup({ timeout: 10000 });
-	$.post('https://allfilmbook.ru/API/project_api.php', { type: 'Form1_AddProject', remind: '', remind_date: '', name: name, id_project: id_project, description: '', type_project: type_project, status: status0, tag: '', data_create: data_create, UserName: UserName,UserHash: UserHash }).done(function (data) {
+	$.post('https://api.allfilmbook.ru/project_api.php', { type: 'Form1_AddProject', remind: '', remind_date: '', name: name, id_project: id_project, description: '', type_project: type_project, status: status0, tag: '', data_create: data_create, UserName: UserName,UserHash: UserHash }).done(function (data) {
 	
 		if (data === "Ok") {
 			if (id_project > 0) Form1_Run_once = 0 // Обновить список проектов
@@ -436,7 +436,7 @@ function Form2_ShowHide(id0) { // Активировать Form2 Редакти�
 		ModalWindowView.classList.add('dm-overlayV');
 
 
-		$.post('https://allfilmbook.ru/API/project_api.php', { type: 'ProjectView', id: id0, UserName: UserName,UserHash: UserHash }).done(function (data) {
+		$.post('https://api.allfilmbook.ru/project_api.php', { type: 'ProjectView', id: id0, UserName: UserName,UserHash: UserHash }).done(function (data) {
 			json = JSON.parse(data);
 			document.getElementById('Form2_name').value = json['name']
 			document.getElementById('Form2_id').value = id0
@@ -493,7 +493,7 @@ function Form2Post(id) {
 	var remind_time = document.getElementById('Form2_remind_time').value
 
 	$.ajaxSetup({ timeout: 4000 });
-	$.post('https://allfilmbook.ru/API/project_api.php', { type: 'Form2_EditProject', remind: remind, remind_time: remind_time,remind_date: remind_date, id: id, name: name, id_project: id_project, description: description, type_project: type_project, status: status0, tag: tag, data_create: data_create, UserName: UserName,UserHash: UserHash }).done(function (data) {
+	$.post('https://api.allfilmbook.ru/project_api.php', { type: 'Form2_EditProject', remind: remind, remind_time: remind_time,remind_date: remind_date, id: id, name: name, id_project: id_project, description: description, type_project: type_project, status: status0, tag: tag, data_create: data_create, UserName: UserName,UserHash: UserHash }).done(function (data) {
 		if (data === "Ok") {
 			if (id_project > 0) Form1_Run_once = 0 // Обновить список проектов
 			Form2_ShowHide()
@@ -537,7 +537,7 @@ function Form3Post() { // Отправить запрос
 
 
 	$.ajaxSetup({ timeout: 3000 });
-	$.post('https://allfilmbook.ru/API/project_api.php', { type: 'Form3_RegistrationUser', login: login, password: password }).done(function (data) {
+	$.post('https://api.allfilmbook.ru/project_api.php', { type: 'Form3_RegistrationUser', login: login, password: password }).done(function (data) {
 
 		if (data === "Ok") {
 			Form3_ShowHide()
@@ -569,7 +569,7 @@ function Form4Post() { // Отправить запрос
 	var login = document.getElementById('Form4_login').value
 	var password = document.getElementById('Form4_password').value
 	$.ajaxSetup({ timeout: 3000 });
-	$.post('https://allfilmbook.ru/API/project_api.php', { type: 'Form4_Authorization', login: login, password: password }).done(function (data) {
+	$.post('https://api.allfilmbook.ru/project_api.php', { type: 'Form4_Authorization', login: login, password: password }).done(function (data) {
 
 		if (data === "Ok")
 			location.reload();
@@ -589,7 +589,7 @@ function Form1_GetProjectList() {
 		///-----------------Добавляем  списки форм добавления магазина------------------------
 
 		$.ajaxSetup({ timeout: 3000 });
-		$.post('https://allfilmbook.ru/API/project_api.php', { type: 'ProjectDeloList', UserName: UserName,UserHash: UserHash }).done(function (data) {
+		$.post('https://api.allfilmbook.ru/project_api.php', { type: 'ProjectDeloList', UserName: UserName,UserHash: UserHash }).done(function (data) {
 			var ModalWindow = document.getElementById('Form1_id_project');
 			var ModalWindow1 = document.getElementById('Form2_id_project');
 			json = JSON.parse(data);
@@ -628,7 +628,7 @@ function Form5_ShowHide(id0) { // Активировать Form5
 function Form5Post() {
 	var id = document.getElementById('Form5_id').value
 	$.ajaxSetup({ timeout: 3000 });
-	$.post('https://allfilmbook.ru/API/project_api.php', { type: 'Form5_DeleteProject', id: id, UserName: UserName,UserHash: UserHash }).done(function (data) {
+	$.post('https://api.allfilmbook.ru/project_api.php', { type: 'Form5_DeleteProject', id: id, UserName: UserName,UserHash: UserHash }).done(function (data) {
 		if (data === "Ok") {
 			Form5_ShowHide()
 			RunLast()

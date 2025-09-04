@@ -7,12 +7,12 @@ setTimeout(UpdateList,500);
 function UpdateList() {
 
   document.getElementById('DirectoryPath').innerHTML='Путь: '+file_dir;
-fetch('https://allfilmbook.ru/API/FileManager/', {
+fetch('https://api.allfilmbook.ru/FileManager/', {
   method: 'POST',
   headers: {
     'Content-Type': 'application/x-www-form-urlencoded',
   },
-  body: `type=ListFiles&dates=`+file_dir // Замените datesValue на ваше значение dates
+  body: 'UserName='+UserName+',UserHash='+ UserHash+'&type=ListFiles&dates='+file_dir 
 })
   .then(response => response.json())
   .then(data => {
@@ -90,9 +90,11 @@ fetch('https://allfilmbook.ru/API/FileManager/', {
 
 function DownloadSelectFile() {
   var file=file_dir+'/'+SelectFileData;
-$.post('https://allfilmbook.ru/API/FileManager/', {
+$.post('https://api.allfilmbook.ru/FileManager/', {
   type: 'DownloadFile',
-  dates: file_dir+'/'+SelectFileData
+  dates: file_dir+'/'+SelectFileData,
+  UserName: UserName,
+  UserHash: UserHash
 }, function(response) {
   let res = JSON.parse(response);
   var fileTransfer = new FileTransfer();
@@ -205,7 +207,7 @@ var error = '';
 if (error != '') {$('#info').html(error);} else {
  
         $.ajax({
-            url: 'https://allfilmbook.ru/API/FileManager/',
+            url: 'https://api.allfilmbook.ru/FileManager/',
             data: data,
             cache: false,
             contentType: false,
@@ -232,9 +234,11 @@ function DeleteFileDir() {
 
 var file=file_dir+'/'+SelectFileData;
 
-$.post('https://allfilmbook.ru/API/FileManager/', {
+$.post('https://api.allfilmbook.ru/FileManager/', {
   type: 'DeleteFileDir',
-  dates: file_dir+'/'+SelectFileData
+  dates: file_dir+'/'+SelectFileData,
+  UserName: UserName,
+  UserHash: UserHash
 }, function(response) {
 
   HideMessage('Modal_Head_Delete');
@@ -244,9 +248,11 @@ $.post('https://allfilmbook.ru/API/FileManager/', {
 
 function AddDir() {
   var Folder = document.getElementById('CreateFolderName').value;
-    $.post('https://allfilmbook.ru/API/FileManager/', {
+    $.post('https://api.allfilmbook.ru/FileManager/', {
     type: 'CreateDirectory',
-    dates: file_dir+'/'+Folder
+    dates: file_dir+'/'+Folder,
+    UserName: UserName,
+    UserHash: UserHash
   }, function(response) {
   
     HideMessage('Modal_Head_CreateFolder');
