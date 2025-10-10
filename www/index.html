@@ -72,17 +72,17 @@
 	
 <div class="menu_task">
 
-		<button class="buttonPerform" onclick="PerformList()" title='Выполнить' type="submit"></button>
-		<button class="buttonProject" onclick="ProjectList()" title='Проекты' type="submit"></button>
-		<button class="buttonDiary" onclick="DiaryList()" title='Дневник' type="submit"></button>
-		<button class="buttonTask" onclick="TaskList()" title='Дело' type="submit"></button>
-		<button class="buttonWishes" onclick="WishesList()" title='Желания' type="submit"></button>
-		<button class="buttonIdea" onclick="IdeaList()" title='Идеи' type="submit"></button>
-		<button class="buttonLifestyle" onclick="LifestyleList()" title='Образ жизни'  type="submit"></button>
-		<button class="buttonReference" onclick="ReferenceList()" title='Справочные' type="submit"></button> 
-		<button class="buttonStatistic" onclick="StatisticList()" title='Статистика' type="submit"></button> |
-		<button class="buttonViewClose" onclick="if(ViewClose==0){ViewClose=1;} else {ViewClose=0;}; RunLast()" type="submit" title='Завершенные'></button>
-		<button class="buttonViewHide" onclick="if(ViewHide==0){ViewHide=1;} else {ViewHide=0;}; RunLast()" type="submit" title='Будущие' ></button>
+		<button class="buttonPerform" onclick="TaskAll(9);" title='Выполнить' type="submit"></button>
+		<button class="buttonProject" onclick="TaskAll(1);" title='Проекты' type="submit"></button>
+		<button class="buttonDiary" onclick="TaskAll(13)" title='Дневник' type="submit"></button>
+		<button class="buttonTask" onclick="TaskAll(15)" title='Дело' type="submit"></button>
+		<button class="buttonWishes" onclick="TaskAll(10)" title='Желания' type="submit"></button>
+		<button class="buttonIdea" onclick="TaskAll(12)" title='Идеи' type="submit"></button>
+		<button class="buttonLifestyle" onclick="TaskAll(11)" title='Образ жизни'  type="submit"></button>
+		<button class="buttonReference" onclick="TaskAll(14)" title='Справочные' type="submit"></button> 
+		<button class="buttonStatistic" onclick="TaskAll(16)" title='Статистика' type="submit"></button> |
+		<button class="buttonViewClose" onclick="if(ViewClose==0){ViewClose=1;} else {ViewClose=0;}; TaskAll()" type="submit" title='Завершенные'></button>
+		<button class="buttonViewHide" onclick="if(ViewHide==0){ViewHide=1;} else {ViewHide=0;}; TaskAll()" type="submit" title='Будущие' ></button>
 			<button id="open-filemanager" class="open-filemanager" style='float: right;' onclick="FileMenegerHide()" title='Файловый менеджер'></button>
 	</div>
 

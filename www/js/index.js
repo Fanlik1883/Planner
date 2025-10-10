@@ -11,132 +11,60 @@ if (!UserHash || !UserName) { // Если не авторизован
 }
 var offset=0;
 Form1_GetProjectList()
-RunLast()
-function RunLast() { // Задачи на выполнения
+
+const HeadDates={
+	9:{title:'Выполнить',name:'PerformList'},
+	15:{title:'Дело',name:'TaskList'},
+	1:{title:'Проекты',name:'ProjectList'},
+	13:{title:"Дневник",includes:"<input type='text' id='search' onchange='TaskAll()' value=''>",name:'DiaryList'},
+	10:{title:'Желания',name:'WishesList'},
+	12:{title:'Идеи',name:'IdeaList'},
+	11:{title:'Образ жизни',name:'LifestyleList'},
+	14:{title:'Справочные данные',name:'ReferenceList'},
+	16:{title:"Статистика данные",includes:"<br><input id='Form10_name'  style='width: 80%;' type='text' size='40'><input type='hidden' id='Form10_id_project' value='0'><input type='hidden' id='Form10_type_project' value='16'><input type='hidden' id='Form10_status' value='1'><button onclick='Form10Post()' style='width: 15%;' type='submit'>Добавить</button>",name:'StatisticList'},
+
+
+};		  
+
+TaskAll()
+
+		  
+var errorCount = 0;
+function TaskAll(RazdelId=0,offset = 0) {
+	if(RazdelId==0){
 	var results = document.cookie.match(/UserPage=(.+?)(;|$)/);
 	if (results !== null) {
-		UserPage = results[1]
-		eval(UserPage + "()")
-	}
-	else
-		PerformList();
-}
-
-function PerformList(offset = 0) { // Задачи на выполнения
-	document.cookie = "UserPage=PerformList"
-	Razdel_id = 9;
-
+		RazdelId = Number(results[1])
+	}}
+	document.cookie = "UserPage="+RazdelId;
 	var ViewPort = document.getElementById('ViewPort');
 	ViewPort.innerHTML = '';
 	var ViewPort0 = document.getElementById('HeadShop');
-	ViewPort0.innerHTML = "<h3>Выполнить</h3>"
-	$.ajaxSetup({ timeout: 10000 });
-
-	////--------------------------	ViewPort.innerHTML=''; UserName: UserName,UserHash: UserHash
-	$.post('https://api.allfilmbook.ru/project_api.php', { type: 'PerformList', ViewClose: ViewClose, ViewHide: ViewHide, UserName: UserName,UserHash: UserHash }).done(function (data) {
+	var tmp='';
+	if(HeadDates[RazdelId].includes) tmp=HeadDates[RazdelId].includes;
+	ViewPort0.innerHTML = "<h3>"+HeadDates[RazdelId].title+"</h3>"+tmp;
+	$.ajaxSetup({ timeout: 5000 });
+	$.post('https://api.allfilmbook.ru/project_api.php', { type: HeadDates[RazdelId].name, ViewClose: ViewClose, ViewHide: ViewHide, UserName: UserName,UserHash: UserHash }).done(function (data) {
 		json = JSON.parse(data);
 		OutList=OutList.concat(json);
 		renderTable (Razdel_id,OutList);
-	})
-
-
+	}).fail(function () {
+        errorCount++;
+        if (errorCount < 3) { // задайте максимальное количество повторных попыток
+            TaskAll(RazdelId, offset);
+        } else {
+			errorCount=0;
+			alert('Нет доступа в интернет.');
+        }
+    });
+	document.cookie = "UserPage="+RazdelId;
 }
 
 
 
-function TaskList(offset = 0) { // Проекты
-	document.cookie = "UserPage=TaskList"
-	Razdel_id = 15;
-	var TaskHtml;
-	var ViewPort = document.getElementById('ViewPort');
-	ViewPort.innerHTML = '';
-	var ViewPort0 = document.getElementById('HeadShop');
-	ViewPort0.innerHTML = "<h3>Дело</h3>"
-	$.ajaxSetup({ timeout: 10000 });
-
-	////--------------------------	ViewPort.innerHTML='';
-	$.post('https://api.allfilmbook.ru/project_api.php', { type: 'TaskList', UserName: UserName,UserHash: UserHash }).done(function (data) {
-		json = JSON.parse(data);
-		OutList=OutList.concat(json);
-		renderTable (Razdel_id,OutList);
-	})
-}
-
-function TaskInProjectList(id) { // Проекты
-	$.ajaxSetup({ timeout: 3000 });
-	var liLast = '';
-	////--------------------------	ViewPort.innerHTML='';
-	$.post('https://api.allfilmbook.ru/project_api.php', { type: 'TaskInProjectList', id: id, UserName: UserName,UserHash: UserHash }).done(function (data) {
-		json = JSON.parse(data);
-		json.forEach(function (item, i, json) {
-			liLast = liLast + "<p>&nbsp &nbsp &nbsp &nbsp<input type='checkbox' onclick='Done(" + item['id'] + ")'> <label onclick='ShowHideDescription(" + item['id'] + ")'>" + item['name'] + " " + item['remind_date'] + "  <img src='img/baseline_edit_black_24dp.png'  onclick='Form2_ShowHide(" + item['id'] + ")' style='width: 24px;display: unset;'  title='Редактировать'><img src='img/baseline_delete_black_24dp.png'  onclick='Form5_ShowHide(" + item['id'] + ")' style='width: 24px;display: unset;'  title='Удалить'></label><div class='dropdown-Description' id='Description_" + item['id'] + "'><hr>" + item['description'] + "</div></p>"
-		})
-		let Des = document.getElementById('Description_' + id)
-		let p1 = document.createElement('p');
-		p1.id = "ProjectList_" + id;
-		p1.innerHTML = liLast;
-		Des.prepend(p1);
-
-		//id_project=document.getElementById('Description_"+id)	  
-	})
-
-
-}
-
-
-
-
-
-
-function ProjectList(offset = 0) { // Проекты
-	document.cookie = "UserPage=ProjectList"
-	Razdel_id = 1;
-	var ViewPort = document.getElementById('ViewPort');
-	ViewPort.innerHTML = '';
-	var ViewPort0 = document.getElementById('HeadShop');
-	ViewPort0.innerHTML = "<h3>Проекты</h3>"
-	$.ajaxSetup({ timeout: 10000 });
-
-	////--------------------------	ViewPort.innerHTML='';
-	$.post('https://api.allfilmbook.ru/project_api.php', { type: 'ProjectList', UserName: UserName,UserHash: UserHash }).done(function (data) {
-		json = JSON.parse(data);
-		OutList=OutList.concat(json);
-		renderTable (Razdel_id,OutList);
-	})
-
-
-}
-
-
-function DiaryList(offset = 0) { // Дневник
-	document.cookie = "UserPage=DiaryList"
-	Razdel_id = 13;
-	var ViewPort = document.getElementById('ViewPort');
-	if (offset == 0) {
-		ViewPort.innerHTML = '';
-		OutList=[];
-		var ViewPort0 = document.getElementById('HeadShop');
-		ViewPort0.innerHTML = "<h3>Дневник</h3><input type='text' id='search' value=''>"
-	}
 	
 
 
-	document.getElementById("search").addEventListener("input", function() {
-		
-		renderTable (Razdel_id,OutList,document.getElementById("search").value)
-	  });
-
-	$.ajaxSetup({ timeout: 10000 });
-
-	////--------------------------	ViewPort.innerHTML='';
-	$.post('https://api.allfilmbook.ru/project_api.php', { type: 'DiaryList', UserName: UserName,UserHash: UserHash ,offset: offset}).done(function (data) {
-		json = JSON.parse(data);
-		OutList=OutList.concat(json);
-		renderTable (Razdel_id,OutList);
-	})
-
-
-}
 
 function renderTable (Razdel_id,OutList0,search=''){
 	var ViewPort = document.getElementById('ViewPort');
@@ -145,6 +73,11 @@ function renderTable (Razdel_id,OutList0,search=''){
 	}
 	json.forEach(function (item, i, OutList0) {
 		if (search.length>1){
+			/****
+			if ((search.length>1&&item.name.toLowerCase().includes(search.toLowerCase())||search.length<2)){
+			 * 
+			 * 
+			 */
 			if (item.name.toLowerCase().includes(search.toLowerCase())){
 				let liLast = document.createElement('tr');
 				if (Razdel_id == 1 || Razdel_id == 10||Razdel_id == 11 || Razdel_id == 12 ||Razdel_id == 15) liLast.innerHTML = "<td ><input type='checkbox' onclick='Done(" + item['id'] + ")'> <label onclick='ShowHideDescription(" + item['id'] + ")'>" + item['name'] + " " + item['remind_date'] + "  <img src='img/baseline_edit_black_24dp.png'  onclick='Form2_ShowHide(" + item['id'] + ")' style='width: 24px;display: unset;'  title='Редактировать'><img src='img/baseline_delete_black_24dp.png'  onclick='Form5_ShowHide(" + item['id'] + ")' style='width: 24px;display: unset;'  title='Удалить'></label><div class='dropdown-Description' id='Description_" + item['id'] + "'><hr>" + item['description'] + "</div></td>"
@@ -166,112 +99,13 @@ function renderTable (Razdel_id,OutList0,search=''){
 }
 
 
-function WishesList(offset = 0) { // Желания
-	document.cookie = "UserPage=WishesList"
-	Razdel_id = 10;
-	var ViewPort = document.getElementById('ViewPort');
-	ViewPort.innerHTML = '';
-	var ViewPort0 = document.getElementById('HeadShop');
-	ViewPort0.innerHTML = "<h3>Желания</h3>"
-	$.ajaxSetup({ timeout: 10000 });
-
-	////--------------------------	ViewPort.innerHTML='';
-	$.post('https://api.allfilmbook.ru/project_api.php', { type: 'WishesList', UserName: UserName,UserHash: UserHash }).done(function (data) {
-		json = JSON.parse(data);
-		OutList=OutList.concat(json);
-		renderTable (Razdel_id,OutList);
-	})
-
-
-}
-
-function IdeaList(offset = 0) { //Идеи
-	document.cookie = "UserPage=IdeaList"
-	Razdel_id = 12;
-	var ViewPort = document.getElementById('ViewPort');
-	ViewPort.innerHTML = '';
-	var ViewPort0 = document.getElementById('HeadShop');
-	ViewPort0.innerHTML = "<h3>Идеи</h3>"
-	$.ajaxSetup({ timeout: 10000 });
-
-	////--------------------------	ViewPort.innerHTML='';
-	$.post('https://api.allfilmbook.ru/project_api.php', { type: 'IdeaList', UserName: UserName,UserHash: UserHash }).done(function (data) {
-		json = JSON.parse(data);
-		OutList=OutList.concat(json);
-		renderTable (Razdel_id,OutList);
-	})
-
-
-}
-
-function LifestyleList(offset = 0) { // Образ жизни
-	Razdel_id = 11;
-	document.cookie = "UserPage=LifestyleList"
-	var ViewPort = document.getElementById('ViewPort');
-	ViewPort.innerHTML = '';
-	var ViewPort0 = document.getElementById('HeadShop');
-	ViewPort0.innerHTML = "<h3>Образ жизни</h3>"
-	$.ajaxSetup({ timeout: 10000 });
-
-	////--------------------------	ViewPort.innerHTML='';
-	$.post('https://api.allfilmbook.ru/project_api.php', { type: 'LifestyleList', UserName: UserName,UserHash: UserHash }).done(function (data) {
-		json = JSON.parse(data);
-		OutList=OutList.concat(json);
-		renderTable (Razdel_id,OutList);
-	})
-
-
-}
-
-function ReferenceList(offset = 0) { // Справочные данные
-	document.cookie = "UserPage=ReferenceList"
-	Razdel_id = 14;
-	var ViewPort = document.getElementById('ViewPort');
-	ViewPort.innerHTML = '';
-	var ViewPort0 = document.getElementById('HeadShop');
-	ViewPort0.innerHTML = "<h3>Справочные данные</h3>"
-	$.ajaxSetup({ timeout: 10000 });
-
-	////--------------------------	ViewPort.innerHTML='';
-	$.post('https://api.allfilmbook.ru/project_api.php', { type: 'ReferenceList', UserName: UserName,UserHash: UserHash }).done(function (data) {
-		json = JSON.parse(data);
-		OutList=OutList.concat(json);
-		renderTable (Razdel_id,OutList);
-	})
-
-
-}
-
-
-function StatisticList(offset = 0) { // Справочные данные
-	document.cookie = "UserPage=StatisticList"
-	Razdel_id = 16;
-	var ViewPort = document.getElementById('ViewPort');
-	ViewPort.innerHTML = '';
-	var ViewPort0 = document.getElementById('HeadShop');
-	ViewPort0.innerHTML = "<h3>Статистика данные</h3><br><input id='Form10_name'  style='width: 80%;' type='text' size='40'><input type='hidden' id='Form10_id_project' value='0'><input type='hidden' id='Form10_type_project' value='16'><input type='hidden' id='Form10_status' value='1'><button onclick='Form10Post()' style='width: 15%;' type='submit'>Добавить</button>"
-	$.ajaxSetup({ timeout: 10000 });
-
-	////--------------------------	ViewPort.innerHTML='';
-	$.post('https://api.allfilmbook.ru/project_api.php', { type: 'StatisticList', UserName: UserName,UserHash: UserHash }).done(function (data) {
-		json = JSON.parse(data);
-		OutList=OutList.concat(json);
-		renderTable (Razdel_id,OutList);
-	})
-
-
-}
-
-
-
-
 
 function Done(id) {
 
 	$.ajaxSetup({ timeout: 10000 });
 	$.post('https://api.allfilmbook.ru/project_api.php', { type: 'Done', id: id, UserName: UserName,UserHash: UserHash }).done(function (data) {
 		if (data === "Ok") {
-			RunLast()
+			TaskAll()
 		}
 		else
 			alert(data)
@@ -285,7 +119,7 @@ function Pluse1Day(id) {
 	$.ajaxSetup({ timeout: 10000 });
 	$.post('https://api.allfilmbook.ru/project_api.php', { type: 'Pluse1Day', id: id, UserName: UserName,UserHash: UserHash }).done(function (data) {
 		if (data === "Ok") {
-			RunLast()
+			TaskAll()
 		}
 		else
 			alert(data)
@@ -370,7 +204,7 @@ function Form1Post() {
 		if (data === "Ok") {
 			if (id_project > 0) Form1_Run_once = 0 // Обновить список проектов
 			Form1_ShowHide()
-			RunLast();
+			TaskAll();
 		}
 		else
 			alert(data)
@@ -395,7 +229,7 @@ function Form10Post() {
 		if (data === "Ok") {
 			if (id_project > 0) Form1_Run_once = 0 // Обновить список проектов
 		//	Form1_ShowHide()
-			RunLast();
+			TaskAll();
 		}
 		else
 			alert(data)
@@ -497,7 +331,7 @@ function Form2Post(id) {
 		if (data === "Ok") {
 			if (id_project > 0) Form1_Run_once = 0 // Обновить список проектов
 			Form2_ShowHide()
-			RunLast()
+			TaskAll()
 		}
 		else
 			alert(data)
@@ -631,7 +465,7 @@ function Form5Post() {
 	$.post('https://api.allfilmbook.ru/project_api.php', { type: 'Form5_DeleteProject', id: id, UserName: UserName,UserHash: UserHash }).done(function (data) {
 		if (data === "Ok") {
 			Form5_ShowHide()
-			RunLast()
+			TaskAll()
 		}
 		else
 			alert(data)

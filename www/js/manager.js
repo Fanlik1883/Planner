@@ -12,7 +12,7 @@ fetch('https://api.allfilmbook.ru/FileManager/', {
   headers: {
     'Content-Type': 'application/x-www-form-urlencoded',
   },
-  body: 'UserName='+UserName+',UserHash='+ UserHash+'&type=ListFiles&dates='+file_dir 
+  body: 'UserName='+UserName+'&UserHash='+ UserHash+'&type=ListFiles&dates='+file_dir 
 })
   .then(response => response.json())
   .then(data => {
@@ -21,9 +21,7 @@ fetch('https://api.allfilmbook.ru/FileManager/', {
 
     const fileElements = document.querySelectorAll('.file-list');
 
-    // Проверяем, есть ли элементы с таким классом
     if (fileElements.length > 0) {
-      // Удаляем каждый элемент
       fileElements.forEach(fileElement => {
         fileElement.remove();
       });
@@ -50,7 +48,6 @@ fetch('https://api.allfilmbook.ru/FileManager/', {
       fileListContainer.appendChild(fileListItem);
 
       fileIcon.addEventListener('click',SelectFile());
-     // fileIcon.addEventListener('click',detectDoubleTapClosure());
    
     });
   })
@@ -73,12 +70,8 @@ fetch('https://api.allfilmbook.ru/FileManager/', {
 
   const iconMap = { "aac": "aac.png", "c": "c.png", "doc": "doc.png", "flv": "flv.png", "iso": "iso.png", "mid": "mid.png", "odt": "odt.png", "php": "php.png", "rar": "rar.png", "tga": "tga.png", "xlsx": "xlsx.png", "aiff": "aiff.png", "cpp": "cpp.png", "dotx": "dotx.png", "gif": "gif.png", "java": "java.png", "mp3": "mp3.png", "otp": "otp.png", "png": "png.png", "rb": "rb.png", "tgz": "tgz.png", "xml": "xml.png", "ai": "ai.png", "css": "css.png", "dwg": "dwg.png", "h": "h.png", "hpp": "hpp.png", "js": "js.png", "mp4": "mp4.png", "ott": "ott.png", "psd": "psd.png", "sass": "sass.png", "sql": "sql.png", "bmp": "bmp.png", "dmg": "dmg.png", "exe": "exe.png", "ics": "ics.png", "less": "less.png", "ods": "ods.png", "pdf": "pdf.png", "qt": "qt.png", "txt": "txt.png", "wav": "wav.png", "zip": "zip.png" };
   
-  // Функция для получения пути к иконке
   function getIconPath(extension) {
-    // Преобразуем расширение в нижний регистр, чтобы обеспечить корректное сравнение
     const lowerCaseExtension = extension.toLowerCase();
-    
-    // Проверяем, есть ли такое расширение в объекте iconMap
     if (iconMap[lowerCaseExtension]) {
       return `img/icon/file/${iconMap[lowerCaseExtension]}`;
     } else {
@@ -118,14 +111,7 @@ $.post('https://api.allfilmbook.ru/FileManager/', {
       fileURI,
       fileURL,
       function(entry) {
-	  /*     cordova.plugins.notification.local.schedule({
-            title: 'Закачка',
-            text: 'Загрузка завершена.<a href="'+fileURL+'">'+SelectFileData+'</a>',
-            androidLargeIcon: 'res://img/icon.png',
-            foreground: true 
-        });*/
         showNotification('Загрузка <a onclik=\"openFileInExternalApp('+fileURL+');\">'+SelectFileData+'</a> завершена.');
-       // showNotification('Загрузка '+SelectFileData+' завершена.');
       },
       function(error) {
          let message;
@@ -187,7 +173,7 @@ $.post('https://api.allfilmbook.ru/FileManager/', {
   
   
 
-setTimeout(function(){ // Загрузка файла, загрузка с задержкой
+setTimeout(function(){ 
 
     $('#preloader').hide();
     $('#file').bind('change', function(){
@@ -199,7 +185,7 @@ var error = '';
  
             if(file.name.length < 1) {               
                error = error + ' Файл имеет неправильный размер! ';             
-            } //Проверка на длину имени             
+            }            
 
         data.append('file-'+i, file);
     });
@@ -295,9 +281,7 @@ function SelectFile() {
     const curTime = new Date().getTime();
     const tapLen = curTime - lastTap;
     if (tapLen < 500 && tapLen > 0) {
-     // console.log('Double tapped!');
       event.preventDefault();
-    //  event.target.alt;
       if (event.target.parentNode.classList[1]=='select') {
         var FileSelect=file_list.find(item => item.name == selectedFile);
         if(FileSelect.file==true)  DownloadSelectFile();
