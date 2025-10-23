@@ -13,14 +13,14 @@ var offset=0;
 Form1_GetProjectList()
 
 const HeadDates={
-	9:{title:'Выполнить',name:'PerformList'},
-	15:{title:'Дело',name:'TaskList'},
-	1:{title:'Проекты',name:'ProjectList'},
-	13:{title:"Дневник",includes:"<input type='text' id='search' onchange='TaskAll()' value=''>",name:'DiaryList'},
-	10:{title:'Желания',name:'WishesList'},
-	12:{title:'Идеи',name:'IdeaList'},
-	11:{title:'Образ жизни',name:'LifestyleList'},
-	14:{title:'Справочные данные',name:'ReferenceList'},
+	9:{title:'Выполнить',name:'PerformList',includes:""},
+	15:{title:'Дело',name:'TaskList',includes:""},
+	1:{title:'Проекты',name:'ProjectList',includes:""},
+	13:{title:"Дневник",includes:"<input type='text' id='search' oninput='renderTable()' value=''>",name:'DiaryList'},
+	10:{title:'Желания',name:'WishesList',includes:""},
+	12:{title:'Идеи',name:'IdeaList',includes:""},
+	11:{title:'Образ жизни',name:'LifestyleList',includes:""},
+	14:{title:'Справочные данные',name:'ReferenceList',includes:""},
 	16:{title:"Статистика данные",includes:"<br><input id='Form10_name'  style='width: 80%;' type='text' size='40'><input type='hidden' id='Form10_id_project' value='0'><input type='hidden' id='Form10_type_project' value='16'><input type='hidden' id='Form10_status' value='1'><button onclick='Form10Post()' style='width: 15%;' type='submit'>Добавить</button>",name:'StatisticList'},
 
 
@@ -41,13 +41,12 @@ function TaskAll(RazdelId=0,offset = 0) {
 	ViewPort.innerHTML = '';
 	var ViewPort0 = document.getElementById('HeadShop');
 	var tmp='';
-	if(HeadDates[RazdelId].includes) tmp=HeadDates[RazdelId].includes;
-	ViewPort0.innerHTML = "<h3>"+HeadDates[RazdelId].title+"</h3>"+tmp;
+	ViewPort0.innerHTML = "<h3>"+HeadDates[RazdelId].title+"</h3>"+HeadDates[RazdelId].includes;
 	$.ajaxSetup({ timeout: 5000 });
 	$.post('https://api.allfilmbook.ru/project_api.php', { type: HeadDates[RazdelId].name, ViewClose: ViewClose, ViewHide: ViewHide, UserName: UserName,UserHash: UserHash }).done(function (data) {
 		json = JSON.parse(data);
 		OutList=OutList.concat(json);
-		renderTable (Razdel_id,OutList);
+		renderTable (Razdel_id);
 	}).fail(function () {
         errorCount++;
         if (errorCount < 3) { // задайте максимальное количество повторных попыток
@@ -66,18 +65,17 @@ function TaskAll(RazdelId=0,offset = 0) {
 
 
 
-function renderTable (Razdel_id,OutList0,search=''){
+function renderTable (Razdel_id=0){
+	if(Razdel_id==0){
+		results = document.cookie.match(/UserPage=(.+?)(;|$)/);
+		if (results !== null) {Razdel_id = Number(results[1])}}
 	var ViewPort = document.getElementById('ViewPort');
-	if (search.length>1){
-		ViewPort.innerHTML = '';
-	}
-	json.forEach(function (item, i, OutList0) {
-		if (search.length>1){
-			/****
-			if ((search.length>1&&item.name.toLowerCase().includes(search.toLowerCase())||search.length<2)){
-			 * 
-			 * 
-			 */
+	var search = document.getElementById('search')?.value || "";
+
+	if (search.length>2){ViewPort.innerHTML = '';	}
+	json.forEach(function (item, i, OutList) {
+		if (search.length>2){
+
 			if (item.name.toLowerCase().includes(search.toLowerCase())){
 				let liLast = document.createElement('tr');
 				if (Razdel_id == 1 || Razdel_id == 10||Razdel_id == 11 || Razdel_id == 12 ||Razdel_id == 15) liLast.innerHTML = "<td ><input type='checkbox' onclick='Done(" + item['id'] + ")'> <label onclick='ShowHideDescription(" + item['id'] + ")'>" + item['name'] + " " + item['remind_date'] + "  <img src='img/baseline_edit_black_24dp.png'  onclick='Form2_ShowHide(" + item['id'] + ")' style='width: 24px;display: unset;'  title='Редактировать'><img src='img/baseline_delete_black_24dp.png'  onclick='Form5_ShowHide(" + item['id'] + ")' style='width: 24px;display: unset;'  title='Удалить'></label><div class='dropdown-Description' id='Description_" + item['id'] + "'><hr>" + item['description'] + "</div></td>"
