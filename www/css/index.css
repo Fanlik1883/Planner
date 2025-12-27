@@ -210,7 +210,7 @@ body {
 
 
 .buttonPerform {
-  background-image: url('/img/icon-png-transparent-4.jpg');
+  background-image: url('../img/icon-png-transparent-4.jpg');
   background-position: -540px -50px;
   /* Координаты верхнего левого угла иконки */
   width: 45px;
@@ -220,7 +220,7 @@ body {
 }
 
 .buttonReference {
-  background-image: url('/img/icon-png-transparent-4.jpg');
+  background-image: url('../img/icon-png-transparent-4.jpg');
   background-position: -55px -385px;
   /* Координаты верхнего левого угла иконки */
   width: 45px;
@@ -230,7 +230,7 @@ body {
 }
 
 .buttonStatistic {
-  background-image: url('/img/icon-png-transparent-4.jpg');
+  background-image: url('../img/icon-png-transparent-4.jpg');
   background-position: -55px -150px;
   /* Координаты верхнего левого угла иконки */
   width: 45px;
@@ -241,7 +241,7 @@ body {
 
 
 .buttonDiary {
-  background-image: url('/img/icon-png-transparent-4.jpg');
+  background-image: url('../img/icon-png-transparent-4.jpg');
   background-position: -187px -7px;
   /* Координаты верхнего левого угла иконки */
   width: 45px;
@@ -251,7 +251,7 @@ body {
 }
 
 .buttonProject {
-  background-image: url('/img/icon-png-transparent-4.jpg');
+  background-image: url('../img/icon-png-transparent-4.jpg');
   background-position: -545px -380px;
   /* Координаты верхнего левого угла иконки */
   width: 45px;
@@ -262,7 +262,7 @@ body {
 
 
 .buttonIdea {
-  background-image: url('/img/icon-png-transparent-4.jpg');
+  background-image: url('../img/icon-png-transparent-4.jpg');
   background-position: -187px -288px;
   /* Координаты верхнего левого угла иконки */
   width: 45px;
@@ -272,7 +272,7 @@ body {
 }
 
 .buttonViewHide {
-  background-image: url('/img/icon-png-transparent-4.jpg');
+  background-image: url('../img/icon-png-transparent-4.jpg');
   background-position: -365px -55px;
   /* Координаты верхнего левого угла иконки */
   width: 45px;
@@ -282,7 +282,7 @@ body {
 }
 
 .buttonTask {
-  background-image: url('/img/icon-png-transparent-4.jpg');
+  background-image: url('../img/icon-png-transparent-4.jpg');
   background-position: -452px -147px;
   /* Координаты верхнего левого угла иконки */
   width: 45px;
@@ -292,7 +292,7 @@ body {
 }
 
 .buttonLifestyle {
-  background-image: url('/img/icon-png-transparent-4.jpg');
+  background-image: url('../img/icon-png-transparent-4.jpg');
   background-position: -275px -383px;
   /* Координаты верхнего левого угла иконки */
   width: 45px;
@@ -302,7 +302,7 @@ body {
 }
 
 .buttonViewClose {
-  background-image: url('/img/icon-png-transparent-4.jpg');
+  background-image: url('../img/icon-png-transparent-4.jpg');
   background-position: -53px -53px;
   /* Координаты верхнего левого угла иконки */
   width: 45px;
@@ -312,7 +312,7 @@ body {
 }
 
 .buttonWishes {
-  background-image: url('/img/icon-png-transparent-4.jpg');
+  background-image: url('../img/icon-png-transparent-4.jpg');
   background-position: -188px -194px;
   /* Координаты верхнего левого угла иконки */
   width: 45px;
@@ -322,7 +322,7 @@ body {
 }
 
 .buttonCopy {
-  background-image: url('/img/icon-png-transparent-4.jpg');
+  background-image: url('../img/icon-png-transparent-4.jpg');
   background-position: -187px -7px;
   /* Координаты верхнего левого угла иконки */
   width: 45px;
@@ -332,7 +332,7 @@ body {
 }
 
 .open-filemanager {
-  background-image: url('/img/icon-png-transparent-4.jpg');
+  background-image: url('../img/icon-png-transparent-4.jpg');
   background-position: -232px -333px;
   /* Координаты верхнего левого угла иконки */
   width: 45px;
@@ -343,7 +343,7 @@ body {
 }
 
 .add-filemanager {
-  background-image: url('/img/icon-png-transparent-4.jpg');
+  background-image: url('../img/icon-png-transparent-4.jpg');
   background-position: -367px -333px;
   /* Координаты верхнего левого угла иконки */
   width: 45px;

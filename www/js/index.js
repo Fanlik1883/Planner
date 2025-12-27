@@ -2,7 +2,7 @@ Form1_Run_once = 0
 var UserHash = getCookie("user_hash") || '';
 var UserName = getCookie("user_name") || '';
 var OutList=new Array();
-
+const platform = (window.cordova && window.cordova.platformId) ? window.cordova.platformId  : 'browser';
 
 if (!UserHash || !UserName) { // Если не авторизован
 	document.getElementById('Avtorization_link').innerHTML = '<li><a href="#" onclick=\'Avtorization_ShowHide()\'>Войти</a></li>';

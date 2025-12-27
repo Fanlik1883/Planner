@@ -82,7 +82,6 @@ fetch('https://api.allfilmbook.ru/FileManager/', {
 
 
 function DownloadSelectFile() {
-  var file=file_dir+'/'+SelectFileData;
 $.post('https://api.allfilmbook.ru/FileManager/', {
   type: 'DownloadFile',
   dates: file_dir+'/'+SelectFileData,
@@ -90,28 +89,46 @@ $.post('https://api.allfilmbook.ru/FileManager/', {
   UserHash: UserHash
 }, function(response) {
   let res = JSON.parse(response);
-  var fileTransfer = new FileTransfer();
-  var fileURL = cordova.file.externalRootDirectory+'Download/' + SelectFileData; // Путь, по которому будет сохранен файл
   var fileURI = encodeURI(res.href);
-
   showNotification('Загрузка...');
+if (platform=='browser') {
+  downloadFileBrowser(fileURI, SelectFileData);
+}
+else {
+ downloadFileAndroid(fileURI, SelectFileData);
+}
+
+
+
+
+
+
+});
+
+
+
+}
+
+
+function downloadFileAndroid(url, filename){
+ var fileURL = cordova.file.externalRootDirectory+'Download/' + filename; // Путь, по которому будет сохранен файл
+  var fileTransfer = new FileTransfer();
   window.resolveLocalFileSystemURL(fileURL, function success(fileEntry) {
-    const fileNameParts = SelectFileData.split('.');
+    const fileNameParts = filename.split('.');
     const name = fileNameParts[0];
     const extension = fileNameParts[1] || '';
     var currentDate = new Date();
     fileURL = cordova.file.externalRootDirectory+'Download/' + name+currentDate.getFullYear() + '_' + (currentDate.getMonth() + 1) + '_' + currentDate.getDate() + '_' + currentDate.getHours() + '_' + currentDate.getMinutes() + '_' + currentDate.getSeconds() + '.' + extension;
   })
 
-
-
+ 
 
  setTimeout(function() {
   fileTransfer.download(
-      fileURI,
+      url,
       fileURL,
       function(entry) {
-        showNotification('Загрузка <a onclik=\"openFileInExternalApp('+fileURL+');\">'+SelectFileData+'</a> завершена.');
+        showNotification('Загрузка <a onclik=\"openFileInExternalApp('+fileURL+');\">'+filename+'</a> завершена.');
       },
       function(error) {
          let message;
@@ -143,14 +160,42 @@ $.post('https://api.allfilmbook.ru/FileManager/', {
   );
 }, 200);
 
-
-
-
-});
-
-
-
 }
+
+
+async function downloadFileBrowser(url, filename) {
+  /**
+ * Скачивание файла через браузер
+ * Работает даже без Content-Disposition от сервера
+ */
+  try {
+
+    const response = await fetch(url);
+    
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    }
+    const blob = await response.blob();
+    const blobUrl = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = blobUrl;
+    link.download = filename; 
+    link.style.display = 'none';
+    document.body.appendChild(link);
+    link.click();
+    setTimeout(() => {
+      document.body.removeChild(link);
+      URL.revokeObjectURL(blobUrl);
+    }, 100);
+    return true;
+    
+  } catch (error) {
+    console.error('Ошибка скачивания:', error);
+    showNotification('Произошла ошибка загрузки: '+error)
+    return false;
+  }
+}
+
 
   function OpenFolder(selectedFile){
     file_dir=file_dir+'/'+selectedFile;
