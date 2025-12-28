@@ -13,7 +13,7 @@ body {
 }
 
 /* слой затемнения */
-.dm-overlay {
+.casementHide {
   position: fixed;
   top: 0;
   left: 0;
@@ -27,7 +27,7 @@ body {
 
 
 /* слой затемнения */
-.dm-overlayV {
+.casementView {
   position: fixed;
   top: 0;
   left: 0;
@@ -41,7 +41,7 @@ body {
 
 
 /* активируем слой затемнения и модальное окно */
-.dm-overlay:target {
+.casementHide:target {
   display: block;
   /* анимация и время задержки */
   -webkit-animation: fade .6s;

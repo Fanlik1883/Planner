@@ -3,23 +3,16 @@
 
 <head>
 
-
-	<!-- Basic Page Needs http://getskeleton.com/
-  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
 	<meta charset="utf-8">
 	<title>Планеровщик</title>
 	<meta name="description" content="">
 	<meta name="author" content="">
-
-	<!-- Mobile Specific Metas
-  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
 	<script src="js/cookie.min.js" ></script>
 	<script src="js/avtoriz.js"></script>
 	<script type="text/javascript" charset="utf-8" src="cordova.js"></script> 
 	<script type="text/javascript" src="js/nicEdit.js?v=0.002"></script> 
-	<script type="text/javascript" src="js/manager.js?v=0.003"></script> 
 
 	
 
@@ -37,32 +30,11 @@
 
 
 
-	
-	<script>
 
 
-
-		var user_id = GetCookie("UserId");
-		var UserPage = GetCookie("UserHash");
-		var ViewClose = 0;
-		var ViewHide = 0
-		var Razdel_id = 9;
-		var ProjectList = [];
-
-
-
-
-	</script>
-
-	<!-- FONT  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-
-	<!-- CSS
-  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
 	<link href="css/normalize.css" rel="stylesheet">
 	<link href="css/index.css?v=7.065ы" rel="stylesheet">
 	<link href="css/manager.css?v=7.067" rel="stylesheet">
-	<!-- Favicon
-  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
 	<link rel="icon" type="image/png" href="images/favicon.png">
 
 </head>
@@ -83,7 +55,7 @@
 		<button class="buttonStatistic" onclick="TaskAll(16)" title='Статистика' type="submit"></button> |
 		<button class="buttonViewClose" onclick="if(ViewClose==0){ViewClose=1;} else {ViewClose=0;}; TaskAll()" type="submit" title='Завершенные'></button>
 		<button class="buttonViewHide" onclick="if(ViewHide==0){ViewHide=1;} else {ViewHide=0;}; TaskAll()" type="submit" title='Будущие' ></button>
-			<button id="open-filemanager" class="open-filemanager" style='float: right;' onclick="FileMenegerHide()" title='Файловый менеджер'></button>
+	    <button id="open-filemanager" class="open-filemanager" style='float: right;' onclick="fileManager.HideView()" title='Файловый менеджер'></button>
 	</div>
 
 	
@@ -102,26 +74,13 @@
 		</div>
 	</div>
 
-	<!--ххххххххххххххххххххххххх Основная форма вывода  хххххххххххххххххххххххххххххххххххххххххххххххх
-<!------------------------ Модельное Окно вывода статей   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-	<div onclick='GetSale()' class="dm-overlay" id="Modal0">
-		<div class="dm-table">
-			<div class="dm-cell">
-				<div class="dm-modal" id='WindowSell'>
-
-				</div>
-			</div>
-		</div>
-	</div>
-	<!--ххххххххххххххххххххххххх Модельное Окно вывода статей  ххххххххххххххххххххххххххххххххххх-->
-
 
 	<!------------ Форма добавления Заметки   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-	<div class="dm-overlay" id="Modal1_Head">
+	<div class="casementHide" id="Modal1_Head">
 		<div class="dm-table">
 			<div class="dm-cell">
 				<div class="dm-modal" id='Modal1'>
-				<button id="open-filemanager" class="open-filemanager" style='float: right;' onclick="FileMenegerHide()" title='Файловый менеджер'></button>
+				<button id="open-filemanager" class="open-filemanager" style='float: right;' onclick="fileManager.HideView()" title='Файловый менеджер'></button>
 				<button id="open-filemanager" class="add-filemanager" style='float: right;' onclick="FilePut()" title='Файловый менеджер'></button>
 				<h3>Добавить заметку</h3>Название:<input id='Form1_name' type='text' size='40'><br>
 					Номер проекта:<select id='Form1_id_project' placeholder='Номер проекта'>
@@ -176,22 +135,21 @@
 					Тэги:<input id='Form1_tag' type='text' size='40'><br>
 					Дата создания:<input type="date" id="Form1_data_create" value="">
 					<br>
-					<button onclick="Form1Post()" type="submit">Добавить</button>
-					<button onclick="Form1_ShowHide()" type="submit">Закрыть</button>
+					<button onclick="formDataHandler.Form1Post()" type="submit">Добавить</button>
+					<button onclick="formDataHandler.showHideForm1()" type="submit">Закрыть</button>
 
 				</div>
 			</div>
 		</div>
 	</div>
-	<!-- ххххххххххххххххххххх Форма добавления Заметки    ххххххххххххххххххххххххххххххххххххххххх -->
 
 
 	<!------------ Форма редактирования Заметки   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-	<div class="dm-overlay" id="Modal2_Head">
+	<div class="casementHide" id="Modal2_Head">
 		<div class="dm-table">
 			<div class="dm-cell">
 				<div class="dm-modal" id='Modal2'>
-				<button id="open-filemanager" class="open-filemanager" style='float: right;' onclick="FileMenegerHide()" title='Файловый менеджер'></button>
+				<button id="open-filemanager" class="open-filemanager" style='float: right;' onclick="fileManager.HideView()" title='Файловый менеджер'></button>
 				<button id="open-filemanager" class="add-filemanager" style='float: right;' onclick="FilePut()" title='Файловый менеджер'></button>
 					<h3>Добавить заметку</h3>Название:<input id='Form2_name' type='text' size='40'><br>
 					Номер проекта:<select id='Form2_id_project' placeholder='Номер проекта'>
@@ -247,68 +205,48 @@
 					Тэги:<input id='Form2_tag' type='text' size='40'><br>
 					Дата создания:<input type="date" id="Form2_data_create" value="">
 					<br>
-					<button onclick="Form2Post()" type="submit">Добавить</button>
-					<button onclick="Form2_ShowHide()" type="submit">Закрыть</button>
+					<button onclick="formDataHandler.postForm2()" type="submit">Добавить</button>
+					<button onclick="formDataHandler.showHideForm2()" type="submit">Закрыть</button>
 
 				</div>
 			</div>
 		</div>
 	</div>
-	<!-- ххххххххххххххххххххх Форма редактирования Заметки    ххххххххххххххххххххххххххххххххххххххххх -->
 
 
-	<!------------ Форма добавления Пользователя  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-	<div class="dm-overlay" id="Modal3_Head">
-		<div class="dm-table">
-			<div class="dm-cell">
-				<div class="dm-modal" id='Moda3'>
+<!------------ Форма добавления Авторизации  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+<div class="casementHide" id="Avtorization_Head">
+    <div class="dm-table">
+        <div class="dm-cell">
+            <div class="dm-modal">
+                <h3>Авторизация</h3>Логин:<input id='Avtorization_login' type='text' size='40'><br>
+                Пароль:<input id='Avtorization_password' type='password' size='40'><br>
+                <br><a href='#' onclick='AvtorizationPost()'>Войти</a>
+                <a href='#' onclick='HideMessage("Avtorization_Head")'>Закрыть</a>
 
-					<h3>Регистрация пользователя</h3>Логин:<input id='Form3_login' type='text' size='40'><br>
-					Пароль:<input id='Form3_password' type='password' size='40'><br>
-					<br><a href='#' onclick='Form3Post()'>Добавить</a>
-					<a href='#' onclick='Form3_ShowHide()'>Закрыть</a>
+            </div>
+        </div>
+    </div>
+</div>
 
-				</div>
-			</div>
-		</div>
-	</div>
-	<!-- ххххххххххххххххххххх Форма добавления Пользователя   ххххххххххххххххххххххххххххххххххххххххх -->
-
-
-	<!------------ Форма добавления Авторизации  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-	<div class="dm-overlay" id="Modal4_Head">
-		<div class="dm-table">
-			<div class="dm-cell">
-				<div class="dm-modal" id='Moda4'>
-					<h3>Авторизация</h3>Логин:<input id='Form4_login' type='text' size='40'><br>
-					Пароль:<input id='Form4_password' type='password' size='40'><br>
-					<br><a href='#' onclick='Form4Post()'>Войти</a>
-					<a href='#' onclick='Form4_ShowHide()'>Закрыть</a>
-
-				</div>
-			</div>
-		</div>
-	</div>
-	<!-- ххххххххххххххххххххх Форма добавления Пользователя   ххххххххххххххххххххххххххххххххххххххххх -->
 
 
 
 	<!------------ Форма Удалить проект  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-	<div class="dm-overlay" id="Modal5_Head">
+	<div class="casementHide" id="Modal5_Head">
 		<div class="dm-table">
 			<div class="dm-cell">
 				<div class="dm-modal" id='Moda5'>
 
 					<h3>Удалить заметку?</h3>
 					<input id='Form5_id' type="hidden">
-					<br><a href='#' onclick='Form5Post()'>Да</a>
-					<a href='#' onclick='Form5_ShowHide()'>Нет</a>
+					<br><a href='#' onclick='formDataHandler.postForm5()'>Да</a>
+					<a href='#' onclick='formDataHandler.showHideForm5()'>Нет</a>
 
 				</div>
 			</div>
 		</div>
 	</div>
-	<!-- ххххххххххххххххххххх Форма добавления Пользователя   ххххххххххххххххххххххххххххххххххххххххх -->
 
 
 
@@ -320,9 +258,9 @@
 	<script src="js/index.js?v=16.2206"></script>
 
 
-	<img src='img/pluse.png' onclick="Form1_ShowHide()"
+	<img src='img/pluse.png' onclick="formDataHandler.showHideForm1()"
 		style='position: fixed; bottom: 15px; right: 10px ;width: 10%;' title='Добавить заметку'>
-	<!-- End Document   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+
 
 
 
@@ -336,47 +274,34 @@
 </div>
 
 
-<!------------ Форма добавления Авторизации  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-<div class="dm-overlay" id="Avtorization_Head">
-    <div class="dm-table">
-        <div class="dm-cell">
-            <div class="dm-modal">
-                <h3>Авторизация</h3>Логин:<input id='Avtorization_login' type='text' size='40'><br>
-                Пароль:<input id='Avtorization_password' type='password' size='40'><br>
-                <br><a href='#' onclick='AvtorizationPost()'>Войти</a>
-                <a href='#' onclick='Avtorization_ShowHide()'>Закрыть</a>
-
-            </div>
-        </div>
-    </div>
-</div>
-<!-- ххххххххххххххххххххх Форма добавления Пользователя   ххххххххххххххххххххххххххххххххххххххххх -->
 
 
 
-<!-- File Manager Container -->
+
+
 <div class="file-manager-container" id="file-manager-container">
-	<!-- Header -->
-	<img src="img/icon/no.png" onclick="FileMenegerHide()" style='height: 50px; width: 50px;  top: 20px;  right: 20px; position: absolute;' />
+	<img src="img/icon/no.png" onclick="fileManager.HideView()" style='height: 50px; width: 50px;  top: 20px;  right: 20px; position: absolute;' />
 	<div class="header">
 	  <div id="DirectoryPath">Путь:</div>
 	</div>
   <table><tr><td style='vertical-align: top;' class="navigation-pane">
-	<!-- Navigation Pane -->
+
 
   
-		  <img src="img/icon/back.png" onclick="GoBack()" />
+		  <img src="img/icon/back.png" onclick="fileManager.GoBack()" />
 		  <label for="file"> <img id="icon" src="img/icon/upload.png"></label>
-		  <form action="" enctype="multipart/form-data" method="POST">
-		  <input id="file" type="file" class="hide" multiple="multiple" name="file[]" />
-		  <div id="preloader"><img alt="loader" src="img/icon/load.gif"  style='height: 15px; width: 15px;'/></div>
-				  </form>
+		  <form id="uploadForm" action="" enctype="multipart/form-data" method="POST">
+			<input type="hidden" id="UserName" name="UserName" value="">
+			<input type="hidden" id="UserHash" name="UserHash" value="">
+			<input id="file" type="file" class="hide" multiple="multiple" name="file[]" />
+			<div id="preloader"><img alt="loader" src="img/icon/load.gif" style='height: 15px; width: 15px;'/></div>
+		  </form>
 		  
   
-		  <img src="img/icon/download.png" onclick="DownloadSelectFile()" />
+		  <img src="img/icon/download.png" onclick="fileManager.DownloadSelectFile()" />
 		  <img src="img/icon/no.png" onclick="ShowMessage('Modal_Head_Delete')"" />
 		  <img src="img/icon/addFolder.png" onclick="ShowMessage('Modal_Head_CreateFolder')" />
-		  <img src="img/icon/copy.png" onclick="CopyFile()" />
+		  <img src="img/icon/copy.png" onclick="fileManager.CopyFile()" />
 		  <img src="img/icon/paste.png" onclick="PasteFile()" />
 
 	
@@ -395,36 +320,34 @@
   
   </div>
   
-  <div class="dm-overlay" id="Modal_Head_Delete">
+  <div class="casementHide" id="Modal_Head_Delete">
 	<div class="dm-table">
 	  <div class="dm-cell">
 		<div class="dm-modal" >
   
 		  <h3>Удалить Файл или папку?</h3>
-		  <table><tr><td style='width: 10%;'/><img src="img/icon/yes.png" onclick="DeleteFileDir()" /></td><td style='width: 10%; '><img onclick="HideMessage('Modal_Head_Delete')"  src="img/icon/no.png" /></td></tr></table>
+		  <table><tr><td style='width: 10%;'/><img src="img/icon/yes.png" onclick="fileManager.DeleteFileDir()" /></td><td style='width: 10%; '><img onclick="HideMessage('Modal_Head_Delete')"  src="img/icon/no.png" /></td></tr></table>
 		</div>
 	  </div>
 	</div>
   </div>
   
   
-  <div class="dm-overlay" id="Modal_Head_CreateFolder">
+  <div class="casementHide" id="Modal_Head_CreateFolder">
 	<div class="dm-table">
 	  <div class="dm-cell">
 		<div class="dm-modal" ">
   
 		  <h3>Создать папку?</h3>
 		  |<input  type="text" id="CreateFolderName"  size="10" />
-		  <table><tr><td style='width: 10%;'/><img src="img/icon/yes.png" onclick="AddDir()" /></td><td style='width: 10%; '><img onclick="HideMessage('Modal_Head_CreateFolder')"  src="img/icon/no.png" /></td></tr></table>
+		  <table><tr><td style='width: 10%;'/><img src="img/icon/yes.png" onclick="fileManager.AddDir()" /></td><td style='width: 10%; '><img onclick="HideMessage('Modal_Head_CreateFolder')"  src="img/icon/no.png" /></td></tr></table>
 		</div>
 	  </div>
 	</div>
   </div>
 
 
-
-
-
+	<script type="text/javascript" src="js/manager.js?v=0.003"></script> 
 </body>
 
 </html>
