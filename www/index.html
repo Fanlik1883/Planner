@@ -44,17 +44,17 @@
 	
 <div class="menu_task">
 
-		<button class="buttonPerform" onclick="TaskAll(9);" title='Выполнить' type="submit"></button>
-		<button class="buttonProject" onclick="TaskAll(1);" title='Проекты' type="submit"></button>
-		<button class="buttonDiary" onclick="TaskAll(13)" title='Дневник' type="submit"></button>
-		<button class="buttonTask" onclick="TaskAll(15)" title='Дело' type="submit"></button>
-		<button class="buttonWishes" onclick="TaskAll(10)" title='Желания' type="submit"></button>
-		<button class="buttonIdea" onclick="TaskAll(12)" title='Идеи' type="submit"></button>
-		<button class="buttonLifestyle" onclick="TaskAll(11)" title='Образ жизни'  type="submit"></button>
-		<button class="buttonReference" onclick="TaskAll(14)" title='Справочные' type="submit"></button> 
-		<button class="buttonStatistic" onclick="TaskAll(16)" title='Статистика' type="submit"></button> |
-		<button class="buttonViewClose" onclick="if(ViewClose==0){ViewClose=1;} else {ViewClose=0;}; TaskAll()" type="submit" title='Завершенные'></button>
-		<button class="buttonViewHide" onclick="if(ViewHide==0){ViewHide=1;} else {ViewHide=0;}; TaskAll()" type="submit" title='Будущие' ></button>
+		<button class="buttonPerform" onclick="planer.ViewTaskAll(9);" title='Выполнить' type="submit"></button>
+		<button class="buttonProject" onclick="planer.ViewTaskAll(1);" title='Проекты' type="submit"></button>
+		<button class="buttonDiary" onclick="planer.ViewTaskAll(13)" title='Дневник' type="submit"></button>
+		<button class="buttonTask" onclick="planer.ViewTaskAll(15)" title='Дело' type="submit"></button>
+		<button class="buttonWishes" onclick="planer.ViewTaskAll(10)" title='Желания' type="submit"></button>
+		<button class="buttonIdea" onclick="planer.ViewTaskAll(12)" title='Идеи' type="submit"></button>
+		<button class="buttonLifestyle" onclick="planer.ViewTaskAll(11)" title='Образ жизни'  type="submit"></button>
+		<button class="buttonReference" onclick="planer.ViewTaskAll(14)" title='Справочные' type="submit"></button> 
+		<button class="buttonStatistic" onclick="planer.ViewTaskAll(16)" title='Статистика' type="submit"></button> |
+		<button class="buttonViewClose" onclick="if(ViewClose==0){ViewClose=1;} else {ViewClose=0;}; planer.ViewTaskAll()" type="submit" title='Завершенные'></button>
+		<button class="buttonViewHide" onclick="if(ViewHide==0){ViewHide=1;} else {ViewHide=0;}; planer.ViewTaskAll()" type="submit" title='Будущие' ></button>
 	    <button id="open-filemanager" class="open-filemanager" style='float: right;' onclick="fileManager.HideView()" title='Файловый менеджер'></button>
 	</div>
 
@@ -122,9 +122,9 @@
 						<option value='+2 days'>2 дня</option>
 						<option value='+3 days'>3 дня</option>
 						<option value='+4 days'>4 дня</option>
-						<option value='+5 days'>5 деней</option>
-						<option value='+6 days'>6 деней</option>
-						<option value='+7 days'>7 деней</option>
+						<option value='+5 days'>5 дней</option>
+						<option value='+6 days'>6 дней</option>
+						<option value='+7 days'>7 дней</option>
 						<option value='+10 days'>10 дней</option>
 						<option value='+1 month'>1 месяц</option>
 						<option value='+2 month'>2 месяц</option>

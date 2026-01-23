@@ -2,11 +2,10 @@ const TIME1DAY = 86400000;
 const TIMEREQUEST = 5000;
 var ViewClose = 0;
 var ViewHide = 0
-		//var Razdel_id = 9;
 var ProjectList = [];
 
 
-var OutList = new Array();
+
 
 class User {
     constructor() {
@@ -18,17 +17,170 @@ class User {
 const user = new User();
 
 if (!user.UserHash || !user.UserName) {
-    document.getElementById('Avtorization_link').innerHTML = '<li><a href="#" onclick=\'ShowMessage("Avtorization_Head")\'>Войти</a></li>';
+    ShowMessage("Avtorization_Head");
 }
 
-var offset = 0;
+
 
 class Planer {
     constructor() {
         this.RazdelId = Number(getCookie('UserPage')) || 9;
         this.platform = (window.cordova && window.cordova.platformId) ? window.cordova.platformId : 'browser';
         this.Form1_Run_once = 0;
+        this.offset = 0;
+        this.TaskAllJson()
+        this.PlanerData= new Array();;
+        this.OutList= new Array();
+
     }
+
+TaskAllJson() {
+    $.ajaxSetup({ timeout: 10000 });
+
+    // Создаем FormData для POST-полей авторизации
+    const formData = new FormData();
+    formData.append('UserName', user.UserName);
+    formData.append('UserHash', user.UserHash);
+    formData.append('type', 'get_all');
+    
+    /* action и другие параметры добавляем как JSON в отдельное поле
+    const jsonData = {
+        action: 'get_all'
+    };
+    formData.append('data', JSON.stringify(jsonData));
+    */
+    $.ajax({
+        url: 'https://api.allfilmbook.ru/project_api.php',
+        type: 'POST',
+        data: formData,
+        processData: false, // важно: не обрабатывать данные
+        contentType: false, // важно: не устанавливать Content-Type
+        success: function(response) {
+            if (typeof response === 'string') {
+                try {
+                    response = JSON.parse(response);
+                } catch (e) {
+                    alert('Ошибка парсинга JSON ответа');
+                    return;
+                }
+            }
+            
+            // Проверяем новый API формат
+            if (!response || response.success !== true) {
+                const errorMsg = response && response.message 
+                    ? response.message 
+                    : 'Неизвестная ошибка сервера';
+                alert('Ошибка API: ' + errorMsg);
+                return;
+            }
+            
+            const data = response.data;
+            
+            if (!Array.isArray(data)) {
+                alert('Некорректный формат данных от сервера');
+                return;
+            }
+/*            
+            // Декодируем HTML-сущности в описании
+            data.forEach(item => {
+                if (item.description) {
+                    item.description = item.description
+                        .replace(/&apos;/g, "'")
+                        .replace(/&quot;/g, '"');
+                }
+            });
+           */ 
+            planer.PlanerData=data;
+            planer.PlanerData.reverse();
+            planer.ViewTaskAll();
+           
+            // Сбрасываем счетчик ошибок
+            errorCount = 0;
+        },
+        error: function(xhr, status, error) {
+            errorCount++;
+            
+            let errorMessage = 'Не удалось загрузить данные';
+            if (status === 'timeout') {
+                errorMessage = 'Таймаут запроса';
+            } else if (xhr.status === 401) {
+                errorMessage = 'Ошибка авторизации';
+            }
+            
+            if (errorCount < 3) {
+                if (confirm(errorMessage + '. Повторить запрос?')) {
+                    ViewTaskAllJson();
+                }
+            } else {
+                errorCount = 0;
+                alert('Нет доступа к API.');
+            }
+        }
+    });
+
+
+
+}
+
+
+ filterProjectsByType(
+    typeProjectValue, 
+    viewClose = 0, 
+    viewHide = 1,
+    currentDate = new Date()
+) {
+    // Преобразуем искомый тип проекта в строку для сравнения
+    const searchType = String(typeProjectValue);
+    
+    return planer.PlanerData.filter(item => {
+        // Проверяем type_project
+        if (String(item.type_project) !== searchType) {
+            return false;
+        }
+        
+        // Проверяем статус в зависимости от viewClose
+        if (viewClose == 1) {
+            // Если viewClose === 1, нужен статус = 4
+            if (String(item.status) !== "4") {
+                return false;
+            }
+        } else {
+            // Если viewClose !== 1, нужен статус > 0 и < 4
+            const status = parseInt(item.status);
+            if (!(status > 0 && status < 4)) {
+                return false;
+            }
+        }
+        
+        // Дополнительная проверка для type_project = 9
+        if (searchType === "9" && viewHide != 1) {
+            // Проверяем remind_date <= currentDate
+            if (!item.remind_date) {
+                return false; // Если нет даты напоминания - не включаем
+            }
+            
+            const remindDate = new Date(item.remind_date);
+            if (remindDate > currentDate) {
+                return false; // Если дата напоминания в будущем - не включаем
+            }
+        }
+        
+        return true;
+    });
+}
+
+
+
+ ViewTaskAll(RazdelId = 0) {
+    if (RazdelId == 0) RazdelId = planer.RazdelId;
+    setCookieMy('UserPage', RazdelId);
+    planer.RazdelId = RazdelId;
+    visualpanel.ViewPort.innerHTML = '';
+    visualpanel.ViewPortHead.innerHTML = "<h3>" + visualpanel.HeadDates[RazdelId].title + "</h3>" + visualpanel.HeadDates[RazdelId].includes;
+    planer.OutList=this.filterProjectsByType(planer.RazdelId, ViewClose, ViewHide)
+    visualpanel.renderTable(RazdelId);
+}
+
 }
 
 class VisualPanel {
@@ -37,59 +189,18 @@ class VisualPanel {
             9: { title: 'Выполнить', name: 'PerformList', includes: "" },
             15: { title: 'Дело', name: 'TaskList', includes: "" },
             1: { title: 'Проекты', name: 'ProjectList', includes: "" },
-            13: { title: "Дневник", includes: "<input type='text' id='search' oninput='renderTable()' value=''>", name: 'DiaryList' },
+            13: { title: "Дневник", includes: "<input type='text' id='search' oninput='visualpanel.renderTable()' value=''>", name: 'DiaryList' },
             10: { title: 'Желания', name: 'WishesList', includes: "" },
             12: { title: 'Идеи', name: 'IdeaList', includes: "" },
             11: { title: 'Образ жизни', name: 'LifestyleList', includes: "" },
             14: { title: 'Справочные данные', name: 'ReferenceList', includes: "" },
-            16: { title: "Статистика данные", includes: "<br><input id='Form10_name'  style='width: 80%;' type='text' size='40'><input type='hidden' id='Form10_id_project' value='0'><input type='hidden' id='Form10_type_project' value='16'><input type='hidden' id='Form10_status' value='1'><button onclick='formDataHandler.postForm10()' style='width: 15%;' type='submit'>Добавить</button>", name: 'StatisticList' },
+            16: { title: "Статистика данные", includes: "<br><input id='Form10_name'  style='width: 80%;' type='text' size='40'><button onclick='formDataHandler.postForm10()' style='width: 15%;' type='submit'>Добавить</button>", name: 'StatisticList' },
         };
         this.ViewPort = document.getElementById('ViewPort');
         this.ViewPortHead = document.getElementById('HeadShop');
     }
-}
 
-const planer = new Planer();
-const visualpanel = new VisualPanel();
-
-GetProjectList();
-TaskAll();
-
-var errorCount = 0;
-
-function TaskAll(RazdelId = 0, offset = 0) {
-    if (RazdelId == 0) RazdelId = planer.RazdelId;
-    setCookieMy('UserPage', RazdelId);
-    planer.RazdelId = RazdelId;
-    visualpanel.ViewPort.innerHTML = '';
-    visualpanel.ViewPortHead.innerHTML = "<h3>" + visualpanel.HeadDates[RazdelId].title + "</h3>" + visualpanel.HeadDates[RazdelId].includes;
-    
-    $.ajaxSetup({ timeout: TIMEREQUEST });
-    $.post('https://api.allfilmbook.ru/project_api.php', { 
-        type: visualpanel.HeadDates[RazdelId].name, 
-        ViewClose: ViewClose, 
-        ViewHide: ViewHide, 
-        UserName: user.UserName, 
-        UserHash: user.UserHash 
-    }).done(function (data) {
-        json = JSON.parse(data);
-        OutList = OutList.concat(json);
-        renderTable(RazdelId);
-    }).fail(function () {
-        errorCount++;
-        if (errorCount < 3) {
-			if (confirm('Не удалось загрузить данные. Повторить запрос?')) {
-                TaskAll(RazdelId, offset);
-            }
-            
-        } else {
-            errorCount = 0;
-            alert('Нет доступа в интернет.');
-        }
-    });
-}
-
-function renderTable(Razdel_id = 0) {
+renderTable(Razdel_id = 0) {
     Razdel_id = planer.RazdelId;
     var search = document.getElementById('search')?.value || "";
 
@@ -97,18 +208,18 @@ function renderTable(Razdel_id = 0) {
         visualpanel.ViewPort.innerHTML = '';
     }
     
-    json.forEach(function (item, i, OutList) {
+    planer.OutList.forEach(function (item, i) {
         if (search.length > 2) {
             if (item.name.toLowerCase().includes(search.toLowerCase())) {
-                addTableRow(item, Razdel_id);
+                visualpanel.addTableRow(item, Razdel_id);
             }
         } else {
-            addTableRow(item, Razdel_id);
+            visualpanel.addTableRow(item, Razdel_id);
         }
     });
 }
 
-function addTableRow(item, Razdel_id) {
+addTableRow(item, Razdel_id) {
     let liLast = document.createElement('tr');
     
     if (Razdel_id == 1 || Razdel_id == 10 || Razdel_id == 11 || Razdel_id == 12 || Razdel_id == 15) {
@@ -124,6 +235,19 @@ function addTableRow(item, Razdel_id) {
     visualpanel.ViewPort.append(liLast);
 }
 
+
+}
+
+const planer = new Planer();
+const visualpanel = new VisualPanel();
+
+GetProjectList();
+
+
+var errorCount = 0;
+
+
+
 function Done(id) {
     $.ajaxSetup({ timeout: TIMEREQUEST });
     $.post('https://api.allfilmbook.ru/project_api.php', { 
@@ -132,8 +256,8 @@ function Done(id) {
         UserName: user.UserName, 
         UserHash: user.UserHash 
     }).done(function (data) {
-        if (data === "Ok") {
-            TaskAll();
+         if (data.success === true) {
+            planer.ViewTaskAll();
         } else {
             alert(data);
         }
@@ -148,8 +272,8 @@ function Pluse1Day(id) {
         UserName: user.UserName, 
         UserHash: user.UserHash 
     }).done(function (data) {
-        if (data === "Ok") {
-            TaskAll();
+         if (data.success === true) {
+            planer.ViewTaskAll();
         } else {
             alert(data);
         }
@@ -207,10 +331,6 @@ class FormDataHandler {
         // Form5 элементы
         this.Form5_id = document.getElementById('Form5_id');
         
-        // Form10 элементы
-        this.Form10_id_project = document.getElementById('Form10_id_project');
-        this.Form10_type_project = document.getElementById('Form10_type_project');
-        this.Form10_status = document.getElementById('Form10_status');
         
         // Авторизация элементы
         this.Avtorization_login = document.getElementById('Avtorization_login');
@@ -260,86 +380,152 @@ class FormDataHandler {
     
     resetForm10() {
         document.getElementById('Form10_name').value = "";
-        this.Form10_id_project.value = 0;
-        this.Form10_type_project.value = 16;
-        this.Form10_status.value = 1;
     }
     
     
-    Form1Post() {
-        $.ajaxSetup({ timeout: TIMEREQUEST });
-        $.post('https://api.allfilmbook.ru/project_api.php', { 
-            type: 'Form1_AddProject', 
-            remind: this.Form1_remind.value,
-            remind_time: this.Form1_remind_time.value, 
-            remind_date: this.Form1_remind_date.value, 
-            name: this.Form1_name.value, 
-            id_project: this.Form1_id_project.value, 
-            description: nicEditors.findEditor('Form1_description').getContent(),
-            type_project: this.Form1_type_project.value, 
-            status: this.Form1_status.value, 
-            tag: this.Form1_tag.value, 
-            data_create: this.Form1_data_create.value, 
-            UserName: user.UserName,
-            UserHash: user.UserHash 
-        }).done((data) => {
-            if (data === "Ok") {
+Form1Post() {
+    // Отправляем новый элемент в планеровщик и добавляем в массив
+    if(this.Form1_remind_date.value=='') this.Form1_remind_date.value=this.Form1_data_create.value
+    const formData = {
+        type: 'Form1_AddProject',
+        remind: this.Form1_remind.value,
+        remind_time: this.Form1_remind_time.value,
+        remind_date: this.Form1_remind_date.value,
+        name: this.Form1_name.value,
+        id_project: this.Form1_id_project.value,
+        description: nicEditors.findEditor('Form1_description').getContent(),
+        type_project: this.Form1_type_project.value,
+        status: this.Form1_status.value,
+        tag: this.Form1_tag.value,
+        data_create: this.Form1_data_create.value,
+        UserName: user.UserName,
+        UserHash: user.UserHash
+    };
+    
+    $.ajax({
+        url: 'https://api.allfilmbook.ru/project_api.php',
+        type: 'POST',
+        data: formData,
+        timeout: TIMEREQUEST,
+        success: (response) => {
+            // Парсим JSON ответ
+            let data;
+            try {
+                data = typeof response === 'string' ? JSON.parse(response) : response;
+            } catch (e) {
+                console.error('Ошибка парсинга JSON:', e);
+                alert('Ошибка формата ответа от сервера');
+                return;
+            }
+            
+            // Проверяем success из ответа
+            if (data.success === true) {
+                // Создаем копию данных без UserName и UserHash для добавления в массив
+                const newItem = { ...formData };
+                delete newItem.UserName;
+                delete newItem.UserHash;
+                
+                // Добавляем ID из ответа сервера
+                if (data.data && data.data.id) newItem.id = data.data.id;
+                                
+                // Добавляем новую дату создания из ответа, если она есть
+                if (data.data && data.data.created_at)  newItem.data_create = data.data.created_at;
+                                
+                // Добавляем новый элемент в массив PlanerData
+                planer.PlanerData.unshift(newItem);
+                
                 if (this.Form1_id_project.value > 0) planer.Form1_Run_once = 0;
                 this.showHideForm1();
-                TaskAll();
+                planer.ViewTaskAll();
+                
             } else {
-                alert(data);
+                // Если success === false или не указан
+                const errorMessage = data.message || data.error || 'Неизвестная ошибка сервера';
+                alert(errorMessage);
             }
-        });
-    }
-    
-    showHideForm1() {
-        GetProjectList();
-        this.resetForm1();
-        
-        var today = new Date();
-        var dd = String(today.getDate()).padStart(2, '0');
-        var mm = String(today.getMonth() + 1).padStart(2, '0');
-        var yyyy = today.getFullYear();
-        
-        this.Form1_data_create.value = yyyy + "-" + mm + '-' + dd;
-        
-        var ModalWindowView = document.getElementById('Modal1_Head');
-        if (ModalWindowView.classList.value == "casementHide") {
-            this.Form1_type_project.value = planer.RazdelId;
-            ModalWindowView.classList.remove("casementHide");
-            ModalWindowView.classList.add('casementView');
-        } else {
-            ModalWindowView.classList.remove("casementView");
-            ModalWindowView.classList.add("casementHide");
+        },
+        error: (xhr, status, error) => {
+            console.error('Ошибка отправки формы:', status, error);
+            alert('Произошла ошибка при отправке данных');
         }
-    }
+    });
+}
+        
+        showHideForm1() {
+            GetProjectList();
+            this.resetForm1();
+            
+            var today = new Date();
+            var dd = String(today.getDate()).padStart(2, '0');
+            var mm = String(today.getMonth() + 1).padStart(2, '0');
+            var yyyy = today.getFullYear();
+            
+            this.Form1_data_create.value = yyyy + "-" + mm + '-' + dd;
+            
+            var ModalWindowView = document.getElementById('Modal1_Head');
+            if (ModalWindowView.classList.value == "casementHide") {
+                this.Form1_type_project.value = planer.RazdelId;
+                ModalWindowView.classList.remove("casementHide");
+                ModalWindowView.classList.add('casementView');
+            } else {
+                ModalWindowView.classList.remove("casementView");
+                ModalWindowView.classList.add("casementHide");
+            }
+        }
     
     postForm2() {
-        $.ajaxSetup({ timeout: TIMEREQUEST });
-        
-        $.post('https://api.allfilmbook.ru/project_api.php', { 
-            type: 'Form2_EditProject', 
-            remind: this.Form2_remind.value, 
+        // Сохраняем данные формы до отправки
+        const formData = {
+            type: 'Form2_EditProject',
+            remind: this.Form2_remind.value,
             remind_time: this.Form2_remind_time.value,
-            remind_date: this.Form2_remind_date.value, 
-            id: this.Form2_id.value, 
-            name: this.Form2_name.value, 
-            id_project: this.Form2_id_project.value, 
+            remind_date: this.Form2_remind_date.value,
+            id: this.Form2_id.value,
+            name: this.Form2_name.value,
+            id_project: this.Form2_id_project.value,
             description: nicEditors.findEditor('Form2_description').getContent(),
-            type_project: this.Form2_type_project.value, 
-            status: this.Form2_status.value, 
-            tag: this.Form2_tag.value, 
-            data_create: this.Form2_data_create.value, 
+            type_project: this.Form2_type_project.value,
+            status: this.Form2_status.value,
+            tag: this.Form2_tag.value,
+            data_create: this.Form2_data_create.value,
             UserName: user.UserName,
-            UserHash: user.UserHash 
-        }).done((data) => {
-            if (data === "Ok") {
-                if (this.Form2_id_project.value > 0) planer.Form1_Run_once = 0;
-                this.showHideForm2();
-                TaskAll();
-            } else {
-                alert(data);
+            UserHash: user.UserHash
+        };
+        
+        // Создаем копию данных без UserName и UserHash для обновления массива
+        const updateData = { ...formData };
+        delete updateData.UserName;
+        delete updateData.UserHash;
+        
+        $.ajax({
+            url: 'https://api.allfilmbook.ru/project_api.php',
+            type: 'POST',
+            data: formData,
+            timeout: TIMEREQUEST,
+            success: (data) => {
+                 if (data.success === true) {
+                    // Находим и обновляем элемент в массиве PlanerData
+                    const itemId = this.Form2_id.value;
+                    const index = planer.PlanerData.findIndex(item => item.id == itemId);
+                    
+                    if (index !== -1) {
+                        planer.PlanerData[index] = {
+                            ...planer.PlanerData[index], // Сохраняем существующие свойства
+                            ...updateData // Обновляем значения из формы (без UserName/UserHash)
+                        };
+                    }
+                    
+                    if (this.Form2_id_project.value > 0) planer.Form1_Run_once = 0;
+                    this.showHideForm2();
+                    
+                    planer.ViewTaskAll();
+                } else {
+                    alert(data);
+                }
+            },
+            error: (xhr, status, error) => {
+                console.error('Ошибка отправки формы:', status, error);
+                alert('Произошла ошибка при отправке данных');
             }
         });
     }
@@ -408,50 +594,90 @@ class FormDataHandler {
     }
     
     postForm5() {
-        $.ajaxSetup({ timeout: TIMEREQUEST });
-        $.post('https://api.allfilmbook.ru/project_api.php', { 
-            type: 'Form5_DeleteProject', 
-            id: this.Form5_id.value, 
-            UserName: user.UserName,
-            UserHash: user.UserHash 
-        }).done((data) => {
-            if (data === "Ok") {
-                this.showHideForm5();
-                TaskAll();
-            } else {
-                alert(data);
+        const idToDelete = this.Form5_id.value;
+        
+        $.ajax({
+            url: 'https://api.allfilmbook.ru/project_api.php',
+            type: 'POST',
+            data: {
+                type: 'Form5_DeleteProject',
+                id: idToDelete,
+                UserName: user.UserName,
+                UserHash: user.UserHash
+            },
+            timeout: TIMEREQUEST,
+            success: (data) => {
+                 if (data.success === true) {
+                    // Находим индекс элемента для удаления
+                    const index = planer.PlanerData.findIndex(item => item.id == idToDelete);
+                    
+                    // Удаляем элемент из массива, если найден
+                    if (index !== -1) {
+                        planer.PlanerData.splice(index, 1);
+                    }
+                    
+                    this.showHideForm5();
+                    planer.ViewTaskAll();
+                } else {
+                    alert(data);
+                }
+            },
+            error: (xhr, status, error) => {
+                console.error('Ошибка удаления проекта:', status, error);
+                alert('Произошла ошибка при удалении проекта');
             }
         });
     }
     
     postForm10() {
-        var today = new Date();
-        var dd = String(today.getDate()).padStart(2, '0');
-        var mm = String(today.getMonth() + 1).padStart(2, '0');
-        var yyyy = today.getFullYear();
-        var data_create = yyyy + "-" + mm + '-' + dd;
+        // Подготавливаем дату
+        const today = new Date();
+        const dd = String(today.getDate()).padStart(2, '0');
+        const mm = String(today.getMonth() + 1).padStart(2, '0');
+        const yyyy = today.getFullYear();
+        const data_create = yyyy + "-" + mm + '-' + dd;
         
-        $.ajaxSetup({ timeout: TIMEREQUEST });
-        $.post('https://api.allfilmbook.ru/project_api.php', { 
-            type: 'Form1_AddProject', 
-            remind: '', 
-            remind_date: '', 
-            name: document.getElementById('Form10_name').value, 
-            id_project: this.Form10_id_project.value, 
-            description: '', 
-            type_project: this.Form10_type_project.value, 
-            status: this.Form10_status.value, 
-            tag: '', 
-            data_create: data_create, 
+        // Сохраняем данные формы
+        const formData = {
+            type: 'Form1_AddProject',
+            remind: '',
+            remind_time: '', // Добавляем если нужно
+            remind_date: data_create,
+            name: document.getElementById('Form10_name').value,
+            id_project: '0',
+            description: '',
+            type_project: '16',
+            status: '1',
+            tag: '',
+            data_create: data_create,
             UserName: user.UserName,
-            UserHash: user.UserHash 
-        }).done((data) => {
-            if (data === "Ok") {
-                if (this.Form10_id_project.value > 0) planer.Form1_Run_once = 0;
-                this.resetForm10();
-                TaskAll();
-            } else {
-                alert(data);
+            UserHash: user.UserHash
+        };
+        
+        $.ajax({
+            url: 'https://api.allfilmbook.ru/project_api.php',
+            type: 'POST',
+            data: formData,
+            timeout: TIMEREQUEST,
+            success: (data) => {
+                if (data.success === true) {
+                    const newItem = { ...formData };
+                    delete newItem.UserName;
+                    delete newItem.UserHash;
+                    
+                    // Добавляем ID (временный, если сервер не возвращает)
+                   // if (!newItem.id) {  newItem.id = Date.now(); }
+                    planer.PlanerData.unshift(newItem);
+                  //  if (this.Form10_id_project.value > 0) planer.Form1_Run_once = 0;
+                    this.resetForm10();
+                    planer.ViewTaskAll();
+                } else {
+                    alert(data);
+                }
+            },
+            error: (xhr, status, error) => {
+                console.error('Ошибка отправки формы:', status, error);
+                alert('Произошла ошибка при отправке данных');
             }
         });
     }
@@ -551,11 +777,11 @@ function submitFilePut() {
 }
 
 
-
+/*
 const observer = new IntersectionObserver((entries) => {
     if ((window.scrollY > document.body.scrollHeight - 1500) && window.scrollY > 5000) {
-        offset++;
-        DiaryList(offset);
+        planer.offset++;
+        DiaryList(planer.offset);
         let dd = document.getElementById('load-more-button');
         observer.observe(dd);
     }
@@ -567,7 +793,7 @@ const observer = new IntersectionObserver((entries) => {
 let dd = document.getElementById('load-more-button');
 setTimeout(() => observer.observe(dd), 5000);
 
-
+*/
 function ShowMessage(name) {
   var ModalWindowView = document.getElementById(name);
 		ModalWindowView.classList.remove("casementHide");
