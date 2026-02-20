@@ -1,353 +1,323 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <title>Планеровщик</title>
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="js/jquery.min.js"></script>
+    <script src="js/cookie.min.js"></script>
+    <script src="js/avtoriz.js"></script>
+    <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+    <script type="text/javascript" src="js/nicEdit.js?v=0.002"></script>
 
-<head>
+    <script type="text/javascript">
+      bkLib.onDomLoaded(function () {
+        //nicEditors.allTextAreas() ;
+        new nicEditor({
+          fullPanel: true,
+          maxHeight: 500,
+          iconsPath: 'img/nicEditorIcons.gif',
+        }).panelInstance('Form1_description');
+        new nicEditor({
+          fullPanel: true,
+          maxHeight: 500,
+          iconsPath: 'img/nicEditorIcons.gif',
+        }).panelInstance('Form2_description');
+      });
+    </script>
 
-	<meta charset="utf-8">
-	<title>Планеровщик</title>
-	<meta name="description" content="">
-	<meta name="author" content="">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
-	<script src="js/cookie.min.js" ></script>
-	<script src="js/avtoriz.js"></script>
-	<script type="text/javascript" charset="utf-8" src="cordova.js"></script> 
-	<script type="text/javascript" src="js/nicEdit.js?v=0.002"></script> 
+    <script src="js/head.js?v=11"></script>
 
-	
+    <link href="css/index.css?v=7.065ы" rel="stylesheet" />
+    <link href="css/manager.css?v=7.067" rel="stylesheet" />
+    <link rel="icon" type="image/png" href="img/favicon.png" />
+  </head>
 
-
-  <script type="text/javascript">
- bkLib.onDomLoaded(function() {
-			 //nicEditors.allTextAreas() ;
-		new nicEditor({fullPanel : true, maxHeight: 500, iconsPath: 'img/nicEditorIcons.gif'}).panelInstance('Form1_description');
-        new nicEditor({fullPanel : true, maxHeight: 500, iconsPath: 'img/nicEditorIcons.gif'}).panelInstance('Form2_description');
-	});
-  </script>
-
-	<script src="js/head.js?v=11"></script>
-
-
-
-
-
-
-	<link href="css/normalize.css" rel="stylesheet">
-	<link href="css/index.css?v=7.065ы" rel="stylesheet">
-	<link href="css/manager.css?v=7.067" rel="stylesheet">
-	<link rel="icon" type="image/png" href="images/favicon.png">
-
-</head>
-
-<body>
-
-	
-<div class="menu_task">
-
-		<button class="buttonPerform" onclick="planer.ViewTaskAll(9);" title='Выполнить' type="submit"></button>
-		<button class="buttonProject" onclick="planer.ViewTaskAll(1);" title='Проекты' type="submit"></button>
-		<button class="buttonDiary" onclick="planer.ViewTaskAll(13)" title='Дневник' type="submit"></button>
-		<button class="buttonTask" onclick="planer.ViewTaskAll(15)" title='Дело' type="submit"></button>
-		<button class="buttonWishes" onclick="planer.ViewTaskAll(10)" title='Желания' type="submit"></button>
-		<button class="buttonIdea" onclick="planer.ViewTaskAll(12)" title='Идеи' type="submit"></button>
-		<button class="buttonLifestyle" onclick="planer.ViewTaskAll(11)" title='Образ жизни'  type="submit"></button>
-		<button class="buttonReference" onclick="planer.ViewTaskAll(14)" title='Справочные' type="submit"></button> 
-		<button class="buttonStatistic" onclick="planer.ViewTaskAll(16)" title='Статистика' type="submit"></button> |
-		<button class="buttonViewClose" onclick="if(ViewClose==0){ViewClose=1;} else {ViewClose=0;}; planer.ViewTaskAll()" type="submit" title='Завершенные'></button>
-		<button class="buttonViewHide" onclick="if(ViewHide==0){ViewHide=1;} else {ViewHide=0;}; planer.ViewTaskAll()" type="submit" title='Будущие' ></button>
-	    <button id="open-filemanager" class="open-filemanager" style='float: right;' onclick="fileManager.HideView()" title='Файловый менеджер'></button>
-	</div>
-
-	
-	<div id="Avtorization_link" style=''></div>
-
-
-	<!----------------------------- Основная форма вывода   ––––––––––––––––––––––––––––––––––––––––––––––––––    -->
-	<div class="container">
-		<div class="" style="border: 1px solid darkblue;">
-			<div class="Head" id="HeadShop">
-
-			</div>
-			<table id='ViewPort' class="u-full-width">
-			</table>
-			<div id="load-more-button"></div>
-		</div>
-	</div>
-
-
-	<!------------ Форма добавления Заметки   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-	<div class="casementHide" id="Modal1_Head">
-		<div class="dm-table">
-			<div class="dm-cell">
-				<div class="dm-modal" id='Modal1'>
-				<button id="open-filemanager" class="open-filemanager" style='float: right;' onclick="fileManager.HideView()" title='Файловый менеджер'></button>
-				<button id="open-filemanager" class="add-filemanager" style='float: right;' onclick="FilePut()" title='Файловый менеджер'></button>
-				<h3>Добавить заметку</h3>Название:<input id='Form1_name' type='text' size='40'><br>
-					Номер проекта:<select id='Form1_id_project' placeholder='Номер проекта'>
-						<option value='0'>--</option>
-					</select><br>
-					Описание: <textarea name="area1" id='Form1_description' style="width: 35em; height: 200px;"></textarea>
-					Вид:<select id='Form1_type_project' placeholder='Тип'>
-						<option value='0'>Не Активно</option>
-						<option value='9'>Выполнить</option>
-						<option value='10'>Желания</option>
-						<option value='11'>Образ жизни</option>
-						<option value='12'>Идеи</option>
-						<option value='13'>Дневние, заметки</option>
-						<option value='14'>Справочные</option>
-						<option value='15'>Дело</option>
-						<option value='16'>Статистика</option>
-						<option value='1'>Проект</option>
-						<option value='2'>>>под раздел</option>
-						<option value='3'>>>>под раздел</option>
-						<option value='4'>>>>>под раздел</option>
-						<option value='5'>>>>>>под раздел</option>
-						<option value='6'>>>>>>>под раздел</option>
-						<option value='7'>>>>>>>>под раздел</option>
-						<option value='8'>>>>>>>>>под раздел</option>
-					</select><br>
-					Статус:<select id='Form1_status' placeholder='Тип'>
-						<option value='0'>Не Активно</option>
-						<option value='1' selected>Активен</option>
-						<option value='2'>В процессе</option>
-						<option value='3'>За вершон но поддерживается</option>
-						<option value='4'>Завершен</option>
-						<option value='5'>Закрыт/Не актуален</option>
-					</select><br>
-					Напомнить<input type="date" id="Form1_remind_date" value="">
-					<input type="time" id="Form1_remind_time" value="">
-					Повторить:<select id='Form1_remind' placeholder='Повторить'>
-						<option value=''>Не Активно</option>
-						<option value='+1 days'>1й день</option>
-						<option value='+2 days'>2 дня</option>
-						<option value='+3 days'>3 дня</option>
-						<option value='+4 days'>4 дня</option>
-						<option value='+5 days'>5 дней</option>
-						<option value='+6 days'>6 дней</option>
-						<option value='+7 days'>7 дней</option>
-						<option value='+10 days'>10 дней</option>
-						<option value='+1 month'>1 месяц</option>
-						<option value='+2 month'>2 месяц</option>
-						<option value='+3 month'>3 месяц</option>
-						<option value='+6 month'>6 месяц</option>
-						<option value='+1 year'>1 год</option>
-					</select><br>
-					Тэги:<input id='Form1_tag' type='text' size='40'><br>
-					Дата создания:<input type="date" id="Form1_data_create" value="">
-					<br>
-					<button onclick="formDataHandler.Form1Post()" type="submit">Добавить</button>
-					<button onclick="formDataHandler.showHideForm1()" type="submit">Закрыть</button>
-
-				</div>
-			</div>
-		</div>
-	</div>
-
-
-	<!------------ Форма редактирования Заметки   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-	<div class="casementHide" id="Modal2_Head">
-		<div class="dm-table">
-			<div class="dm-cell">
-				<div class="dm-modal" id='Modal2'>
-				<button id="open-filemanager" class="open-filemanager" style='float: right;' onclick="fileManager.HideView()" title='Файловый менеджер'></button>
-				<button id="open-filemanager" class="add-filemanager" style='float: right;' onclick="FilePut()" title='Файловый менеджер'></button>
-					<h3>Добавить заметку</h3>Название:<input id='Form2_name' type='text' size='40'><br>
-					Номер проекта:<select id='Form2_id_project' placeholder='Номер проекта'>
-						<option value='0'>--</option>
-					</select><br>
-					Описание:<textarea name="area2" id='Form2_description' style="width: 35em; height: 200px;"></textarea>
-					<input id='Form2_id' type="hidden">
-					Вид:<select id='Form2_type_project' placeholder='Тип'>
-						<option value=''>Не Активно</option>
-						<option value='9'>Выполнить</option>
-						<option value='10'>Желания</option>
-						<option value='11'>Образ жизни</option>
-						<option value='12'>Идеи</option>
-						<option value='13'>Дневние, заметки</option>
-						<option value='14'>Справочные</option>
-						<option value='15'>Дело</option>
-						<option value='16'>Статистика</option>
-						<option value='1'>Проект</option>
-						<option value='2'>>>под раздел</option>
-						<option value='3'>>>>под раздел</option>
-						<option value='4'>>>>>под раздел</option>
-						<option value='5'>>>>>>под раздел</option>
-						<option value='6'>>>>>>>под раздел</option>
-						<option value='7'>>>>>>>>под раздел</option>
-						<option value='8'>>>>>>>>>под раздел</option>
-					</select><br>
-					Статус:<select id='Form2_status' placeholder='Тип'>
-						<option value='0'>Не Активно</option>
-						<option value='1'>Активен</option>
-						<option value='2'>В процессе</option>
-						<option value='3'>За вершон но поддерживается</option>
-						<option value='4'>Завершен</option>
-						<option value='5'>Закрыт/Не актуален</option>
-					</select><br>
-					Напомнить<input type="date" id="Form2_remind_date" value="">
-					<input type="time" id="Form2_remind_time" value="">
-					Повторить:<select id='Form2_remind' placeholder='Повторить'>
-						<option value=''>Не Активно</option>
-						<option value='+1 days'>1й день</option>
-						<option value='+2 days'>2 дня</option>
-						<option value='+3 days'>3 дня</option>
-						<option value='+4 days'>4 дня</option>
-						<option value='+5 days'>5 дней</option>
-						<option value='+6 days'>6 дней</option>
-						<option value='+7 days'>7 дней</option>
-						<option value='+10 days'>10 дней</option>
-						<option value='+1 month'>1 месяц</option>
-						<option value='+2 month'>2 месяц</option>
-						<option value='+3 month'>3 месяц</option>
-						<option value='+6 month'>6 месяц</option>
-						<option value='+1 year'>1 год</option>
-					</select><br>
-					Тэги:<input id='Form2_tag' type='text' size='40'><br>
-					Дата создания:<input type="date" id="Form2_data_create" value="">
-					<br>
-					<button onclick="formDataHandler.postForm2()" type="submit">Добавить</button>
-					<button onclick="formDataHandler.showHideForm2()" type="submit">Закрыть</button>
-
-				</div>
-			</div>
-		</div>
-	</div>
-
-
-<!------------ Форма добавления Авторизации  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-<div class="casementHide" id="Avtorization_Head">
-    <div class="dm-table">
-        <div class="dm-cell">
-            <div class="dm-modal">
-                <h3>Авторизация</h3>Логин:<input id='Avtorization_login' type='text' size='40'><br>
-                Пароль:<input id='Avtorization_password' type='password' size='40'><br>
-                <br><a href='#' onclick='AvtorizationPost()'>Войти</a>
-                <a href='#' onclick='HideMessage("Avtorization_Head")'>Закрыть</a>
-
-            </div>
-        </div>
+  <body>
+    <!-- Левое меню -->
+    <div class="menu_task menu_task_left">
+      <button id="open-filemanager" class="open-filemanager" onclick="fileManager.HideView()" title="Файловый менеджер"></button>
+      <button id="addMessage" class="addMessage" onclick="formDataHandler.showHideForm1()" title="Добавить заметку"></button>
     </div>
-</div>
 
+    <!-- Правое меню -->
+    <div class="menu_task">
+      <button class="buttonPerform" onclick="planer.ViewTaskAll(9)" title="Выполнить" type="submit" />
+      <button class="buttonProject" onclick="planer.ViewTaskAll(1)" title="Проекты" type="submit" />
+      <button class="buttonDiary" onclick="planer.ViewTaskAll(13)" title="Дневник" type="submit" />
+      <button class="buttonTask" onclick="planer.ViewTaskAll(15)" title="Дело" type="submit" />
+      <button class="buttonWishes" onclick="planer.ViewTaskAll(10)" title="Желания" type="submit" />
+      <button class="buttonIdea" onclick="planer.ViewTaskAll(12)" title="Идеи" type="submit" />
+      <button class="buttonLifestyle" onclick="planer.ViewTaskAll(11)" title="Образ жизни" type="submit" />
+      <button class="buttonReference" onclick="planer.ViewTaskAll(14)" title="Справочные" type="submit" />
+      <button class="buttonStatistic" onclick="planer.ViewTaskAll(16)" title="Статистика" type="submit" />
+      <button
+        class="buttonViewClose"
+        onclick="
+          if (ViewClose == 0) {
+            ViewClose = 1;
+          } else {
+            ViewClose = 0;
+          }
+          planer.ViewTaskAll();
+        "
+        type="submit"
+        title="Завершенные"
+      />
+      <button
+        class="buttonViewHide"
+        onclick="
+          if (ViewHide == 0) {
+            ViewHide = 1;
+          } else {
+            ViewHide = 0;
+          }
+          planer.ViewTaskAll();
+        "
+        type="submit"
+        title="Будущие"
+      />
+    </div>
 
+    <div id="Avtorization_link" style=""></div>
 
+    <!----------------------------- Основная форма вывода   ––––––––––––––––––––––––––––––––––––––––––––––––––    -->
+    <div class="container">
+      <div class="" style="border: 1px solid darkblue">
+        <div class="Head" id="HeadShop"></div>
+        <table id="ViewPort" class="table"></table>
+        <div id="load-more-button"></div>
+      </div>
+    </div>
 
-	<!------------ Форма Удалить проект  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-	<div class="casementHide" id="Modal5_Head">
-		<div class="dm-table">
-			<div class="dm-cell">
-				<div class="dm-modal" id='Moda5'>
+    <!------------ Форма добавления Заметки   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <div class="casementHide" id="Modal1_Head">
+      <div class="dm-table">
+        <div class="dm-cell">
+          <div class="dm-modal" id="Modal1">
+            <input id="Form1_name" style="width: 90vw" placeholder="Название" type="text" size="40" /><br />
+            <textarea name="area1" id="Form1_description" style="width: 90vw; height: 200px"></textarea>
+            <select id="Form1_status" hidden>
+              <option value="0">Статус 0</option>
+              <option value="1" selected>Активен</option>
+              <option value="2">В процессе</option>
+              <option value="3">За вершон но поддерживается</option>
+              <option value="4">Завершен</option>
+              <option value="5">Закрыт/Не актуален</option>
+            </select>
+            <button id="open-filemanager" class="open-filemanager" style="float: right" onclick="fileManager.HideView()" title="Файловый менеджер"></button>
+            <button id="open-filemanager" class="add-filemanager" style="float: right" onclick="FilePut()" title="Файловый менеджер"></button>
+            <select id="Form1_type_project" placeholder="Тип">
+              <option value="0">Не Активно</option>
+              <option value="9">Выполнить</option>
+              <option value="10">Желания</option>
+              <option value="11">Образ жизни</option>
+              <option value="12">Идеи</option>
+              <option value="13">Дневние, заметки</option>
+              <option value="14">Справочные</option>
+              <option value="15">Дело</option>
+              <option value="16">Статистика</option>
+              <option value="1">Проект</option>
+            </select>
+            <select id="Form1_id_project" style="width: 100px">
+              <option value="0">Проект</option>
+            </select>
+            Напомнить<input type="date" id="Form1_remind_date" value="" />
+            <input type="hidden" id="Form1_remind_time" value="" />
+            Повторить:<select id="Form1_remind" placeholder="Повторить">
+              <option value="">Не Активно</option>
+              <option value="+1 days">1й день</option>
+              <option value="+2 days">2 дня</option>
+              <option value="+3 days">3 дня</option>
+              <option value="+4 days">4 дня</option>
+              <option value="+5 days">5 дней</option>
+              <option value="+6 days">6 дней</option>
+              <option value="+7 days">7 дней</option>
+              <option value="+10 days">10 дней</option>
+              <option value="+1 month">1 месяц</option>
+              <option value="+2 month">2 месяц</option>
+              <option value="+3 month">3 месяц</option>
+              <option value="+6 month">6 месяц</option>
+              <option value="+1 year">1 год</option>
+            </select>
+            <input id="Form1_tag" type="hidden" size="40" /><br />
+            <input type="hidden" id="Form1_data_create" value="" />
+            <div style="text-align: center">
+              <button onclick="formDataHandler.Form1Post()" class="BottonTrue" type="submit">Добавить</button>
+              <button onclick="formDataHandler.showHideForm1()" class="BottonFalse" type="submit">Закрыть</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
-					<h3>Удалить заметку?</h3>
-					<input id='Form5_id' type="hidden">
-					<br><a href='#' onclick='formDataHandler.postForm5()'>Да</a>
-					<a href='#' onclick='formDataHandler.showHideForm5()'>Нет</a>
+    <!------------ Форма редактирования Заметки   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <div class="casementHide" id="Modal2_Head">
+      <div class="dm-table">
+        <div class="dm-cell">
+          <div class="dm-modal" id="Modal2">
+            <button id="open-filemanager" class="open-filemanager" style="float: right" onclick="fileManager.HideView()" title="Файловый менеджер"></button>
+            <button id="open-filemanager" class="add-filemanager" style="float: right" onclick="FilePut()" title="Файловый менеджер"></button>
+            <select id="Form2_type_project" placeholder="Тип">
+              <option value="">Не Активно</option>
+              <option value="9">Выполнить</option>
+              <option value="10">Желания</option>
+              <option value="11">Образ жизни</option>
+              <option value="12">Идеи</option>
+              <option value="13">Дневние, заметки</option>
+              <option value="14">Справочные</option>
+              <option value="15">Дело</option>
+              <option value="16">Статистика</option>
+              <option value="1">Проект</option>
+            </select>
+            <select id="Form2_id_project" style="width: 100px">
+              <option value="0">Проект</option>
+            </select>
+            <input id="Form2_name" style="width: 90vw" placeholder="Название" type="text" size="40" /><br />
+            <textarea name="area2" id="Form2_description" style="width: 90vw; height: 200px"></textarea>
+            <input id="Form2_id" type="hidden" />
+            <select id="Form2_status" placeholder="Тип">
+              <option value="0">Статус</option>
+              <option value="1">Активен</option>
+              <option value="2">В процессе</option>
+              <option value="3">За вершон но поддерживается</option>
+              <option value="4">Завершен</option>
+              <option value="5">Закрыт/Не актуален</option></select
+            ><br />
+            Напомнить<input type="date" id="Form2_remind_date" value="" />
+            <input type="hidden" id="Form2_remind_time" value="" />
+            <select id="Form2_remind" placeholder="Повторить">
+              <option value="">Повторить</option>
+              <option value="+1 days">1й день</option>
+              <option value="+2 days">2 дня</option>
+              <option value="+3 days">3 дня</option>
+              <option value="+4 days">4 дня</option>
+              <option value="+5 days">5 дней</option>
+              <option value="+6 days">6 дней</option>
+              <option value="+7 days">7 дней</option>
+              <option value="+10 days">10 дней</option>
+              <option value="+1 month">1 месяц</option>
+              <option value="+2 month">2 месяц</option>
+              <option value="+3 month">3 месяц</option>
+              <option value="+6 month">6 месяц</option>
+              <option value="+1 year">1 год</option>
+            </select>
+            <input id="Form2_tag" type="hidden" size="40" /><br />
+            Дата создания:<input type="date" id="Form2_data_create" value="" /> <br />
+            <div style="text-align: center">
+              <button onclick="formDataHandler.postForm2()" class="BottonTrue" type="submit">Добавить</button>
+              <button onclick="formDataHandler.showHideForm2()" class="BottonFalse" type="submit">Закрыть</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
-				</div>
-			</div>
-		</div>
-	</div>
+    <!------------ Форма добавления Авторизации  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <div class="casementHide" id="Avtorization_Head">
+      <div class="dm-table">
+        <div class="dm-cell">
+          <div class="dm-modal">
+            <h3>Авторизация</h3>
+            Логин:<input id="Avtorization_login" type="text" size="40" /><br />
+            Пароль:<input id="Avtorization_password" type="password" size="40" /><br />
+            <br /><a href="#" onclick="AvtorizationPost()">Войти</a>
+            <a href="#" onclick="HideMessage('Avtorization_Head')" class="BottonFalse">Закрыть</a>
+          </div>
+        </div>
+      </div>
+    </div>
 
+    <!------------ Форма Удалить проект  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <div class="casementHide" id="Modal5_Head">
+      <div class="dm-table">
+        <div class="dm-cell">
+          <div class="dm-modal" id="Moda5">
+            <h3>Удалить заметку?</h3>
+            <input id="Form5_id" type="hidden" />
+            <br /><a href="#" class="BottonTrue" onclick="formDataHandler.postForm5()">Да</a>
+            <a href="#" onclick="formDataHandler.showHideForm5()" class="BottonFalse">Нет</a>
+          </div>
+        </div>
+      </div>
+    </div>
 
+    <script src="js/index.js?v=16.2206"></script>
 
+    <div id="filePutOverlay"></div>
+    <div id="filePutModal">
+      <h2>Вставить файлы</h2>
+      <input type="text" id="fileInput" placeholder="Enter file info here" />
+      <br /><br />
+      <button onclick="closeFilePut()">Закрыть</button>
+      <button onclick="submitFilePut()" class="BottonTrue">Отправить</button>
+    </div>
 
+    <div class="file-manager-container" id="file-manager-container">
+      <img src="img/icon/no.png" onclick="fileManager.HideView()" style="height: 50px; width: 50px; top: 20px; right: 20px; position: absolute" />
+      <div class="header">
+        <div id="DirectoryPath">Путь:</div>
+      </div>
+      <table>
+        <tr>
+          <td style="vertical-align: top" class="navigation-pane">
+            <img src="img/icon/back.png" onclick="fileManager.GoBack()" />
+            <label for="file"> <img id="icon" src="img/icon/upload.png" /></label>
+            <form id="uploadForm" action="" enctype="multipart/form-data" method="POST">
+              <input type="hidden" id="UserName" name="UserName" value="" />
+              <input type="hidden" id="UserHash" name="UserHash" value="" />
+              <input id="file" type="file" class="hide" multiple="multiple" name="file[]" />
+              <div id="preloader"><img alt="loader" src="img/icon/load.gif" style="height: 15px; width: 15px" /></div>
+            </form>
 
+            <img src="img/icon/download.png" onclick="fileManager.DownloadSelectFile()" />
+            <img src="img/icon/no.png" onclick="ShowMessage('Modal_Head_Delete')" />
+            <img src=" img/icon/addFolder.png" onclick="ShowMessage('Modal_Head_CreateFolder')" />
+            <img src="img/icon/copy.png" onclick="fileManager.CopyFile()" />
+            <img src="img/icon/paste.png" onclick="PasteFile()" />
+          </td>
+          <td>
+            <div id="file-lists"></div>
+          </td>
+        </tr>
+      </table>
+    </div>
 
+    <div class="casementHide" id="Modal_Head_Delete">
+      <div class="dm-table">
+        <div class="dm-cell">
+          <div class="dm-modal">
+            <h3>Удалить Файл или папку?</h3>
+            <table>
+              <tr>
+                <td style="width: 10%"><img src="img/icon/yes.png" onclick="fileManager.DeleteFileDir()" /></td>
+                <td style="width: 10%"><img onclick="HideMessage('Modal_Head_Delete')" src="img/icon/no.png" /></td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
 
+    <div class="casementHide" id="Modal_Head_CreateFolder">
+      <div class="dm-table">
+        <div class="dm-cell">
+          <div class="dm-modal">
+            <h3>Создать папку?</h3>
+            |<input type=" text" id="CreateFolderName" size="10" />
+            <table>
+              <tr>
+                <td style="width: 10%"><img src="img/icon/yes.png" onclick="fileManager.AddDir()" /></td>
+                <td style="width: 10%"><img onclick="HideMessage('Modal_Head_CreateFolder')" src="img/icon/no.png" /></td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
 
-	<script src="js/index.js?v=16.2206"></script>
-
-
-	<img src='img/pluse.png' onclick="formDataHandler.showHideForm1()"
-		style='position: fixed; bottom: 15px; right: 10px ;width: 10%;' title='Добавить заметку'>
-
-
-
-
-<div id="filePutOverlay"></div>
-<div id="filePutModal">
-    <h2>Вставить файлы</h2>
-    <input type="text" id="fileInput" placeholder="Enter file info here">
-    <br><br>
-    <button onclick="closeFilePut()">Закрыть</button>
-    <button onclick="submitFilePut()">Отправить</button>
-</div>
-
-
-
-
-
-
-
-<div class="file-manager-container" id="file-manager-container">
-	<img src="img/icon/no.png" onclick="fileManager.HideView()" style='height: 50px; width: 50px;  top: 20px;  right: 20px; position: absolute;' />
-	<div class="header">
-	  <div id="DirectoryPath">Путь:</div>
-	</div>
-  <table><tr><td style='vertical-align: top;' class="navigation-pane">
-
-
-  
-		  <img src="img/icon/back.png" onclick="fileManager.GoBack()" />
-		  <label for="file"> <img id="icon" src="img/icon/upload.png"></label>
-		  <form id="uploadForm" action="" enctype="multipart/form-data" method="POST">
-			<input type="hidden" id="UserName" name="UserName" value="">
-			<input type="hidden" id="UserHash" name="UserHash" value="">
-			<input id="file" type="file" class="hide" multiple="multiple" name="file[]" />
-			<div id="preloader"><img alt="loader" src="img/icon/load.gif" style='height: 15px; width: 15px;'/></div>
-		  </form>
-		  
-  
-		  <img src="img/icon/download.png" onclick="fileManager.DownloadSelectFile()" />
-		  <img src="img/icon/no.png" onclick="ShowMessage('Modal_Head_Delete')"" />
-		  <img src="img/icon/addFolder.png" onclick="ShowMessage('Modal_Head_CreateFolder')" />
-		  <img src="img/icon/copy.png" onclick="fileManager.CopyFile()" />
-		  <img src="img/icon/paste.png" onclick="PasteFile()" />
-
-	
-	</div>
-  </td>
-  <td>
-	<div id="file-lists" ></div>
-	
-  </td>
-  </tr>
-  </table>
-  
-	
-	
-  
-  
-  </div>
-  
-  <div class="casementHide" id="Modal_Head_Delete">
-	<div class="dm-table">
-	  <div class="dm-cell">
-		<div class="dm-modal" >
-  
-		  <h3>Удалить Файл или папку?</h3>
-		  <table><tr><td style='width: 10%;'/><img src="img/icon/yes.png" onclick="fileManager.DeleteFileDir()" /></td><td style='width: 10%; '><img onclick="HideMessage('Modal_Head_Delete')"  src="img/icon/no.png" /></td></tr></table>
-		</div>
-	  </div>
-	</div>
-  </div>
-  
-  
-  <div class="casementHide" id="Modal_Head_CreateFolder">
-	<div class="dm-table">
-	  <div class="dm-cell">
-		<div class="dm-modal" ">
-  
-		  <h3>Создать папку?</h3>
-		  |<input  type="text" id="CreateFolderName"  size="10" />
-		  <table><tr><td style='width: 10%;'/><img src="img/icon/yes.png" onclick="fileManager.AddDir()" /></td><td style='width: 10%; '><img onclick="HideMessage('Modal_Head_CreateFolder')"  src="img/icon/no.png" /></td></tr></table>
-		</div>
-	  </div>
-	</div>
-  </div>
-
-
-	<script type="text/javascript" src="js/manager.js?v=0.003"></script> 
-</body>
-
+    <script type="text/javascript" src="js/manager.js?v=0.003"></script>
+  </body>
 </html>

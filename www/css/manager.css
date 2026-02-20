@@ -14,7 +14,7 @@
   left: 0;
   background-color: rgba(255, 255, 255, 1.0); /* Прозрачный белый цвет */
 
-
+   z-index: 1000;
 
 
 }
@@ -203,46 +203,6 @@ min-height: 800px;
   padding: 0 1em;
 vertical-align: middle;
   text-align: center;
-}
-/* модальный блок */
-.dm-modal {
-  display: inline-block;
-  padding: 20px;
-  font-weight: bold;
-  font-size: 40px;
-/* максимально возможная ширина */
-  max-width: 50em;
-  background: #607d8b;
-/* внешняя тень блока */
-  -webkit-box-shadow: 0px 15px 20px rgba(0, 0, 0, 0.22), 0px 19px 60px rgba(0, 0, 0, 0.3);
-  -moz-box-shadow: 0px 15px 20px rgba(0, 0, 0, 0.22), 0px 19px 60px rgba(0, 0, 0, 0.3);
-  box-shadow: 0px 15px 20px rgba(0, 0, 0, 0.22), 0px 19px 60px rgba(0, 0, 0, 0.3);
-  color: #cfd8dc;
-  /*text-align: left;*/
-/* анимация и время задержки */
-  -webkit-animation: fade .8s;
-  -moz-animation: fade .8s;
-  animation: fade .8s;
-}
-
-.dm-modal input {
-  width: 300px; 
-  height: 50px;
-  font-size: 30px;
-  text-align: center;
-}
-
-.dm-modal div {
-background-color: #f7f7f7;
-}
-/* изображения в модальном окне */
-.dm-modal img {
- height: auto;
-width: auto;
-height: auto;
-max-width: 7vh;
-margin-left: auto;
-margin-right: auto;
 }
 
 /* слой затемнения */
