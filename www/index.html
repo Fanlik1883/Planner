@@ -7,8 +7,8 @@
     <meta name="author" content="" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script src="js/jquery.min.js"></script>
-    <script src="js/cookie.min.js"></script>
-    <script src="js/avtoriz.js"></script>
+    <script src="js/classes/Cookie.js"></script>
+    <script src="js/classes/UserAuth.js"></script>
     <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
     <script type="text/javascript" src="js/nicEdit.js?v=0.002"></script>
 
@@ -28,7 +28,7 @@
       });
     </script>
 
-    <script src="js/head.js?v=11"></script>
+ 
 
     <link href="css/index.css?v=7.065ы" rel="stylesheet" />
     <link href="css/manager.css?v=7.067" rel="stylesheet" />
@@ -108,7 +108,7 @@
               <option value="5">Закрыт/Не актуален</option>
             </select>
             <button id="open-filemanager" class="open-filemanager" style="float: right" onclick="fileManager.HideView()" title="Файловый менеджер"></button>
-            <button id="open-filemanager" class="add-filemanager" style="float: right" onclick="FilePut()" title="Файловый менеджер"></button>
+            <button id="open-filemanager" class="add-filemanager" style="float: right" onclick="fileHandler.GetProjectList()" title="Файловый менеджер"></button>
             <select id="Form1_type_project" placeholder="Тип">
               <option value="0">Не Активно</option>
               <option value="9">Выполнить</option>
@@ -159,7 +159,7 @@
         <div class="dm-cell">
           <div class="dm-modal" id="Modal2">
             <button id="open-filemanager" class="open-filemanager" style="float: right" onclick="fileManager.HideView()" title="Файловый менеджер"></button>
-            <button id="open-filemanager" class="add-filemanager" style="float: right" onclick="FilePut()" title="Файловый менеджер"></button>
+            <button id="open-filemanager" class="add-filemanager" style="float: right" onclick="fileHandler.FilePut()" title="Файловый менеджер"></button>
             <select id="Form2_type_project" placeholder="Тип">
               <option value="">Не Активно</option>
               <option value="9">Выполнить</option>
@@ -223,8 +223,8 @@
             <h3>Авторизация</h3>
             Логин:<input id="Avtorization_login" type="text" size="40" /><br />
             Пароль:<input id="Avtorization_password" type="password" size="40" /><br />
-            <br /><a href="#" onclick="AvtorizationPost()">Войти</a>
-            <a href="#" onclick="HideMessage('Avtorization_Head')" class="BottonFalse">Закрыть</a>
+            <br /><a href="#" onclick="user.AvtorizationPost()" class="BottonTrue">Войти</a>
+            <a href="#" onclick="visualpanel.HideMessage('Avtorization_Head')" class="BottonFalse">Закрыть</a>
           </div>
         </div>
       </div>
@@ -244,15 +244,15 @@
       </div>
     </div>
 
-    <script src="js/index.js?v=16.2206"></script>
+
 
     <div id="filePutOverlay"></div>
     <div id="filePutModal">
       <h2>Вставить файлы</h2>
       <input type="text" id="fileInput" placeholder="Enter file info here" />
       <br /><br />
-      <button onclick="closeFilePut()">Закрыть</button>
-      <button onclick="submitFilePut()" class="BottonTrue">Отправить</button>
+      <button onclick="fileHandler.closeFilePut()">Закрыть</button>
+      <button onclick="fileHandler.submitFilePut()" class="BottonTrue">Отправить</button>
     </div>
 
     <div class="file-manager-container" id="file-manager-container">
@@ -273,8 +273,8 @@
             </form>
 
             <img src="img/icon/download.png" onclick="fileManager.DownloadSelectFile()" />
-            <img src="img/icon/no.png" onclick="ShowMessage('Modal_Head_Delete')" />
-            <img src=" img/icon/addFolder.png" onclick="ShowMessage('Modal_Head_CreateFolder')" />
+            <img src="img/icon/no.png" onclick="visualpanel.ShowMessage('Modal_Head_Delete')" />
+            <img src=" img/icon/addFolder.png" onclick="visualpanel.ShowMessage('Modal_Head_CreateFolder')" />
             <img src="img/icon/copy.png" onclick="fileManager.CopyFile()" />
             <img src="img/icon/paste.png" onclick="PasteFile()" />
           </td>
@@ -293,7 +293,7 @@
             <table>
               <tr>
                 <td style="width: 10%"><img src="img/icon/yes.png" onclick="fileManager.DeleteFileDir()" /></td>
-                <td style="width: 10%"><img onclick="HideMessage('Modal_Head_Delete')" src="img/icon/no.png" /></td>
+                <td style="width: 10%"><img onclick="visualpanel.HideMessage('Modal_Head_Delete')" src="img/icon/no.png" /></td>
               </tr>
             </table>
           </div>
@@ -310,14 +310,19 @@
             <table>
               <tr>
                 <td style="width: 10%"><img src="img/icon/yes.png" onclick="fileManager.AddDir()" /></td>
-                <td style="width: 10%"><img onclick="HideMessage('Modal_Head_CreateFolder')" src="img/icon/no.png" /></td>
+                <td style="width: 10%"><img onclick="visualpanel.HideMessage('Modal_Head_CreateFolder')" src="img/icon/no.png" /></td>
               </tr>
             </table>
           </div>
         </div>
       </div>
     </div>
+<script type="text/javascript" src="js/classes/FormDataHandler.js"></script>
+<script type="text/javascript" src="js/classes/Planer.js"></script>
+<script type="text/javascript" src="js/classes/FileHandler.js"></script>
+<script type="text/javascript" src="js/classes/VisualPanel.js"></script>
 
+    <script src="js/index.js?v=16.2206"></script>
     <script type="text/javascript" src="js/manager.js?v=0.003"></script>
   </body>
 </html>

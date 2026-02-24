@@ -23,50 +23,81 @@ class FileManager {
   }
 
   UpdateList() {
-    document.getElementById('DirectoryPath').innerHTML = 'Путь: ' + file_dir;
+    const directoryPathElement = document.getElementById('DirectoryPath');
+    if (directoryPathElement) {
+      directoryPathElement.innerHTML = 'Путь: ' + file_dir;
+    }
 
     fetch('https://api.allfilmbook.ru/FileManager/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
-      body: 'UserName=' + user.UserName + '&UserHash=' + user.UserHash + '&type=ListFiles&dates=' + file_dir,
+      body: 'UserName=' + encodeURIComponent(user.UserName) + '&UserHash=' + encodeURIComponent(user.UserHash) + '&type=ListFiles&dates=' + encodeURIComponent(file_dir),
     })
-      .then((response) => response.json())
+      .then((response) => {
+        // Проверка статуса ответа
+        if (!response.ok) {
+          throw new Error(`HTTP error ${response.status}: ${response.statusText}`);
+        }
+        return response.json();
+      })
       .then((data) => {
-        data = data.files;
-        file_list = data;
-
-        const fileElements = document.querySelectorAll('.file-list');
-
-        if (fileElements.length > 0) {
-          fileElements.forEach((fileElement) => {
-            fileElement.remove();
-          });
+        // Проверка структуры полученных данных
+        if (!data || !Array.isArray(data.files)) {
+          throw new Error('Некорректный формат данных от сервера');
         }
 
-        const fileListContainer = document.getElementById('file-lists');
-        data.forEach((item) => {
+        const files = data.files;
+        file_list = files; // предполагается глобальная переменная file_list
+
+        // Удаление старых элементов списка
+        const oldFileElements = document.querySelectorAll('.file-list');
+        oldFileElements.forEach((el) => el.remove());
+
+        const container = document.getElementById('file-lists');
+        if (!container) {
+          throw new Error('Контейнер file-lists не найден');
+        }
+
+        // Создание новых элементов
+        files.forEach((item) => {
           const fileListItem = document.createElement('div');
           fileListItem.classList.add('file-list');
+
           const fileIcon = document.createElement('img');
           fileIcon.alt = item.name;
-          var name = this.truncateFileName(item.name);
-          if (item.file == true) fileIcon.src = this.getIconPath(item.ext);
-          else fileIcon.src = 'img/icon/file/folder.png';
-          fileListItem.append(fileIcon);
-          const filenameElement = document.createElement('div');
-          filenameElement.textContent = name;
-          filenameElement.id = item.name;
-          filenameElement.classList.add('filename');
-          fileListItem.append(filenameElement);
-          fileListContainer.appendChild(fileListItem);
+          const displayName = this.truncateFileName(item.name);
 
+          if (item.file === true) {
+            fileIcon.src = this.getIconPath(item.ext);
+          } else {
+            fileIcon.src = 'img/icon/file/folder.png';
+          }
+
+          fileListItem.appendChild(fileIcon);
+
+          const filenameElement = document.createElement('div');
+          filenameElement.textContent = displayName;
+          filenameElement.id = item.name; // потенциально небезопасно, но оставлено как в оригинале
+          filenameElement.classList.add('filename');
+          fileListItem.appendChild(filenameElement);
+
+          container.appendChild(fileListItem);
           fileIcon.addEventListener('click', this.SelectFile());
         });
       })
       .catch((error) => {
-        console.error(error);
+        console.error('Ошибка в UpdateList:', error);
+        alert('Не удалось загрузить список файлов: ' + error.message);
+        const container = document.getElementById('file-lists');
+        if (container) {
+          container.innerHTML = ''; // очищаем контейнер
+          const errorDiv = document.createElement('div');
+          errorDiv.textContent = 'Ошибка загрузки. Попробуйте позже.';
+          errorDiv.style.color = 'red';
+          container.appendChild(errorDiv);
+        }
       });
   }
 
@@ -302,7 +333,7 @@ class FileManager {
         UserHash: user.UserHash,
       },
       (response) => {
-        HideMessage('Modal_Head_Delete');
+        visualpanel.HideMessage('Modal_Head_Delete');
         this.UpdateList();
       },
     );
@@ -319,7 +350,7 @@ class FileManager {
         UserHash: user.UserHash,
       },
       (response) => {
-        HideMessage('Modal_Head_CreateFolder');
+        visualpanel.HideMessage('Modal_Head_CreateFolder');
         document.getElementById('CreateFolderName').value = '';
         this.UpdateList();
       },
@@ -370,16 +401,3 @@ class FileManager {
 
 const fileManager = new FileManager();
 
-//  функция для уведомлений
-function showNotification(html) {
-  const notification = document.createElement('div');
-  notification.classList.add('notification');
-  notification.innerHTML = html;
-  document.body.appendChild(notification);
-  setTimeout(() => {
-    notification.style.opacity = '0';
-    setTimeout(() => {
-      document.body.removeChild(notification);
-    }, 1000);
-  }, 8000);
-}
